@@ -1,0 +1,332 @@
+
+
+{% extends 'base.html' %}
+{% block content %}
+
+<head>
+  <style>
+    .card-fixed-size {
+      width: 250px; /* Fixed width */
+      height: 200px; /* Fixed height */
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .image-container {
+      position: relative;
+      display: inline-block;
+    }
+  
+    .panel-image-container {
+      width: 25px;
+      height: 25px;
+      object-fit: cover;
+    }
+  
+    .image-tooltip {
+      visibility: hidden;
+      width: 120px;
+      background-color: black;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+  
+    .image-container:hover .image-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    
+
+    .delete-icon {
+      position: absolute;
+      top: 5px;  /* Adjust top position */
+      right: 5px; /* Adjust right position */
+      cursor: pointer;
+      display: none;
+      
+    }
+
+    .card-fixed-size:hover .delete-icon{
+      display: block !important;
+    }
+  
+    .delete-icon:hover {
+      color: red !important;
+    }
+  
+    .card-fixed-size {
+      position: relative; /* Add position relative to the card */
+    }
+
+    {% comment %} code to show delete button on hover on panel {% endcomment %}
+    .image-container {
+      position: relative;
+      display: inline-block;
+    }
+  
+    .delete-icon-panel {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+  
+    .black-background {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+  
+    .image-container:hover .delete-icon-panel {
+      display: block;
+    }
+  
+    .image-container:hover .black-background {
+      display: block;
+    }
+  
+    .delete-icon-panel i {
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+
+  
+<div class="container-fluid mt-5">
+  <h4 class="text-center mb-4 text-secondary small">
+    <i class="fa-sharp fa-solid fa-comment-dots me-1 text-secondary"></i>Continue Chatting
+  </h4>
+
+  <div class="d-flex flex-wrap justify-content-start ms-4">
+    {% for chat in advisor_chats %}
+      <div class="ms-2 mb-2"> <!-- Minimal margin -->
+        <div class="card card-fixed-size bg-dark text-white h-100 hover-border position-relative" data-id="{{ chat.id }}" data-response="{{ chat.advisor_id.tagline_text }}" onclick="sendData('{{ chat.id }}', '{{ chat.advisor_id.tagline_text }}', '{{ chat.advisor_id.header_text|lower }}')">
+          <!-- Delete Icon -->
+          <i class="fa-regular fa-trash-can delete-icon text-white" data-id={{chat.id}} data-name="single" ></i> 
+          <a href="/chat/{{ chat.advisor_id.id }}" class="text-decoration-none text-white">
+            <div class="card-body">
+              <h6 class="card-title mb-0 text-yellow fw-bold fs-6">{{ chat.advisor_id.header_text }}</h6>
+              <div class="d-flex align-items-center pt-2">
+                <img src="./media/{{ chat.advisor_id.accountant_image }}" alt="{{ chat.advisor_id.header_text }}" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                <p class="mb-0 text-white small tagline" data-fulltext="{{ chat.advisor_id.tagline_text }}">{{ chat.advisor_id.tagline_text }}</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  
+  
+</div>
+
+
+
+<br/>
+
+<div class="row ms-1">
+<hr class="w-100 bg-white"/>
+
+<div class="container-fluid">
+  <h4 class="text-center mb-4 text-secondary small">
+    <i class="fa-sharp fa-solid fa-comment-dots me-1 text-secondary"></i>Panel Chat
+  </h4>
+
+  <div class="d-flex flex-wrap justify-content-start ms-4">
+    {% for panel in search_panel %}
+    <div class="ms-2 mb-2">
+        <div class="card card-fixed-size bg-dark text-white h-100 hover-border" data-id="{{ panel.id }}" data-response="{{ panel.advisor_id.tagline_text }}">
+            <i class="fa-regular fa-trash-can delete-icon text-white" data-id={{panel.id}} data-name="panel" ></i> 
+            <div class="card-body" style="text-align: left !important;">
+                <h6 class="card-title mb-0 text-yellow fw-bold fs-6">{{ panel.panel_name }}</h6>
+                <div class="d-flex pt-2">
+                    <div class=" ps-0 col-md-auto col-sm-auto">
+                        {% for p_data in panel.accountant_info.all %}
+                        {% if p_data.header_text != "PIIS" %}
+                          <div class="image-container">
+                            <img class="panel-image-container" src="{{ p_data.accountant_image.url }}" alt="Image" style="width: 35px; height: 35px; object-fit: cover;">
+                            <div class="black-background"></div>
+                            <span class="delete-icon-panel" onclick="deleteImage({{ p_data.id }})">
+                                <i class="fa-regular fa-trash-can advisor-delete text-white" data-pid={{panel.id}} data-aid={{p_data.id}} data-name="single" ></i> 
+                            </span>
+                        </div>
+                          {% endif %}
+                            
+                        {% endfor %}
+                    </div>
+                    <a  href="/chat-open/{{ panel.panel_id }}" class="btn btn-sm btn-yellow ms-auto align-items-center justify-content-center my-auto" style="border-radius: 50%; height: 30px; width:30px">
+                      <i class="fa-solid fa-arrow-right" ></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+  </div>
+  
+</div>
+  
+  </div>
+  <!-- swiper end here -->
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const taglines = document.querySelectorAll('.tagline');
+  
+      taglines.forEach(function(tagline) {
+        let fullText = tagline.getAttribute('data-fulltext');
+        let words = fullText.split(' ');
+        if (words.length > 4) {
+          tagline.textContent = words.slice(0, 3).join(' ') + '...';
+        }
+      });
+    });
+  </script>
+
+
+  {% comment %} delete code single chat start {% endcomment %}
+  <script>
+    $(document).ready(function() {
+      $('.delete-icon').click(function(e) {
+        e.preventDefault();
+  
+        var chatId = $(this).data('id'); // Get the chat ID
+        var chatType = $(this).data('name'); // Get the chat ID
+        url='/card_delete_chat/';
+
+        if(chatType=="panel")
+        {
+          url='/card_delete_panelchat/'
+        }
+        // SweetAlert for confirmation
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // AJAX POST request
+            $.ajax({
+              url: url, // Replace with your Django URL
+              type: 'POST',
+              data: JSON.stringify({ id: chatId }),
+              contentType: 'application/json; charset=utf-8',
+              headers: {'X-CSRFToken': getCookie('csrftoken')}, // CSRF token
+  
+              success: function(response) {
+                // SweetAlert success notification
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'Your record has been deleted.',
+                  icon: 'success',
+                  timer: 2000, // Display for 3000 milliseconds (3 seconds)
+                  timerProgressBar: true,
+                  didClose: () => {
+                    location.reload(); // Refresh the page after the timer
+                  }
+                });
+              },
+              error: function(error) {
+                // SweetAlert error notification
+                Swal.fire(
+                  'Error!',
+                  'There was an error deleting your record.',
+                  'error'
+                );
+              }
+            });
+          }
+        });
+      });
+    });
+  
+    // Function to get CSRF token
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = jQuery.trim(cookies[i]);
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+  
+  {% comment %} delete code single chat end  {% endcomment %}
+
+  {% comment %} code to delete advisor from panel start {% endcomment %}
+  <script>
+    // jQuery click event for delete icon
+    $('.advisor-delete').on('click', function () {
+      var panelId = $(this).data('pid');
+      var advisorId = $(this).data('aid');
+  
+      // Show SweetAlert confirmation dialog
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        // If user clicks "Yes"
+        if (result.isConfirmed) {
+          // Send data to the Django backend using AJAX
+          $.ajax({
+            url: '/delete-advisor-panel/',
+            type: 'POST',
+            data: { 'pid': panelId, 'aid': advisorId },
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+            success: function (response) {
+              // Handle success
+              Swal.fire('Deleted!', 'The advisor has been deleted.', 'success');
+              // Reload the page after deletion
+              window.location.reload();
+            },
+            error: function (error) {
+              // Handle error
+              Swal.fire('Error', 'An error occurred while deleting the advisor.', 'error');
+            }
+          });
+        }
+      });
+    });
+
+    
+  </script>
+
+  {% comment %} code to delete advisor from panel end {% endcomment %}
+
+
+  {% endblock %}
+  

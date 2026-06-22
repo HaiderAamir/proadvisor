@@ -1,0 +1,671 @@
+<html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <!-- Demo styles -->
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.css" />
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  
+<style>
+  /* CSS for the loader */
+  .loader {
+    border: 6px solid #f1b135; /* Light grey */
+    border-top: 6px solid #ffffff; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .card.active {
+    border: 2px solid #f1b135;
+  }
+
+  .hover-border:hover {
+    transform: scale(1.05);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 0px 10px 0px #f1b135;
+  }
+
+  .advisor-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .advisor-info p {
+    margin: 0; /* Remove default margin to align text properly */
+    font-style: italic; /* Make the name appear in italics */
+    flex: 1; /* Allow the name to expand and fill available space */
+    white-space: nowrap; /* Prevent the name from wrapping to the next line */
+    overflow: hidden; /* Hide any overflow if the name is too long */
+    text-overflow: ellipsis; /* Add ellipsis if the name overflows */
+    text-align: left !important;
+
+  }
+
+  .ellipsis-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.text-yellow{
+  color: #f1b135;
+}
+
+.btn-yellow{
+  background-color: #f1b135;
+  font-weight: bold !important;
+}
+
+.btn-yellow:hover{
+  border: 2px solid #f1b135;
+  /*background-color: #f1b135;*/
+  font-weight: bold !important;
+}
+
+  
+
+.chosen {
+  border: 2px solid #f1b135 !important; /* Add your chosen card styling here */
+  background-color: #222; /* Add background color or other styling */
+}
+/* Highlight only the first 3 cards */
+
+#advisor-container > div:nth-child(-n+3){
+  border: 2px solid #f1b135; /* Add a border to highlight */
+  background-color: #242525;
+  box-shadow: 0px 0px 10px 0px #f1b135;
+}
+
+.text-white{
+  color: #d8d6d1 !important;
+}
+  
+.form-control{
+border: 0px !important;
+border-bottom: 2px solid #f1b135 !important;
+border-radius: 0px !important;
+}
+
+.form-control:focus {
+  border: 0px !important;
+  border-bottom: 2px solid #f1b135 !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;  
+}
+
+.btn-close{
+  color: #f1b135 !important;
+}
+
+.modal{
+  --bs-modal-header-border-color: #242525 !important;
+  --bs-modal-footer-border-color: #242525 !important;
+}
+  
+  
+  
+
+  
+</style>
+
+  
+</head>
+
+<body class="bg-dark" style="overflow-y: scroll;">
+
+  {% comment %} modal to ask panel name start {% endcomment %}
+  <div class="modal fade" id="chat-panel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Add Panel</h1>
+                <button type="button" class="btn-close text-yellow" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control bg-dark text-white mb-3" id="panel-name" placeholder="Panel Name" value=''/>
+                <input class="form-control bg-dark text-white mb-3" id="panel-topic" placeholder="Panel Topic" value=''/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-success" onclick="startchat()">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  {% comment %} modal to ask panel name end {% endcomment %}
+
+  <div class="text-center m-auto mt-5 mb-5" id="header-section">
+      <h3 class="text-light" style="font-weight: bolder;">
+        <img src="./media/media/logo/logo.png" class="ms-3" alt="ProAdvisor.AI" style="height: 80px; width: 80px;">
+        Expertise from Every Angle
+      </h3>
+
+  </div>
+
+
+  <div class="text-center m-auto">
+    <div class="container pb-2 pt-5 w-50 bg-dark text-white" style="border: 1px solid #d8d6d1; background-color: rgb(36, 37, 37) !important;">
+      <div class="container-fluid">
+          <input type="text" id="userInput" class="form-control bg-dark text-white" placeholder="Ask anything ..." style="width: 100%; border: 0px; background-color: rgb(36, 37, 37) !important; font-size: 25px;">
+      </div>
+      <div class="row m-auto">
+        <div class="col-6 d-flex mt-4 align-items-center" id="Expertise-Focus">
+          <i class="fas fa-search me-2"></i>
+          <span style="color: #c2c2bd">Expertise Focus</span>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+          <button type="submit" class="btn rounded-circle mt-3" id="submit-btn" style="height:50px; width: 50px; background-color: #f1b135; margin-right: -10px;" onclick="quickSearch()">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- Section -->
+  <div class="text-center m-auto" id="Expertise-Box">
+    <div class="container py-3 bg-dark text-white" style="border: 1px solid #d8d6d1; background-color: #000000 !important;width: 60%;">
+
+      <div class="row">
+      
+        {% for experty in experties %}
+                <div class="col-md-4">
+                  <div class="card" style="background-color: #000000;" id="{{ experty.category_id.id }}" onclick="addCategoryIdToList({{ experty.category_id.id }})">
+                    <div class="row g-0">
+                      <div class="col-md-4 d-flex align-items-center justify-content-center">
+                        <img src="{{ experty.image.url }}" style="height: 60px; width: 60px" class="img-fluid rounded-circle" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body" style="text-align: left;">
+                          <h6 style="color: #f1b135; font-weight: bold;">{{ experty.name }}</h6>
+                          <p class="card-text text-light" style="color: #f1b135; font-size: 10px">{{ experty.tag_line }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        {% endfor %}
+
+       
+
+        
+      </div>
+    
+    
+    </div>
+  </div>
+
+
+  <div class="text-center m-auto">
+    <div class="container py-3 bg-dark text-white" style="width: 90%;">
+      <h2 id="advisor-main-heading"  class="row gap-3 justify-content-center mb-5" style="text-align: left; color: #c2c2bd !important;"></h2>
+      <div id="advisor-container"  class="row gap-3 justify-content-center" style="text-align: left;">
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+
+
+
+
+  <div class="footer bg-dark text-white text-center py-3 fixed-bottom">
+    <div class="container">
+      <ul class="list-inline mb-0">
+        <li class="list-inline-item"><a href="#" class="text-white" style="text-decoration: none;"><h6 style="font-weight: bold">Try Pro</h6></a></li>
+        <li class="list-inline-item"><a href="#" class="text-white" style="text-decoration: none;"><h6 style="font-weight: bold">FAQ</h6></a></li>
+        <li class="list-inline-item"><a href="#" class="text-white" style="text-decoration: none;"><h6 style="font-weight: bold">Blog</h6></a></li>
+        <li class="list-inline-item"><a href="#" class="text-white" style="text-decoration: none;"><h6 style="font-weight: bold">Privacy</h6></a></li>
+        <li class="list-inline-item"><a href="#" class="text-white" style="text-decoration: none;"><h6 style="font-weight: bold">Terms</h6></a></li>
+      </ul>
+    </div>
+  </div>
+
+{% comment %} 
+  <div class="card bg-dark get-card m-auto text-center" data-id="${advisorData.id}" data-response="${advisorData.response}" onclick="sendData(${advisorData.id}, '${removeQuotes(advisorData.response)}', '${removeQuotes(advisorData.question)}')">
+    <div class="row ps-2 pt-1" style="text-align: left">
+      <p class="card-text text-light" style="font-size: 14px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">${advisorData.response}</p>
+      <p class="context text-light" id="context" style="display: none">${advisorData.context}</p>
+      <p class="context text-light" id="question" style="display: none">${advisorData.question}</p>
+    </div>
+    <div class="row">
+      <div class="col-md-3 pt-4 d-flex align-items-start justify-content-start bg-warning">
+        <img src="${advisorData.image}" style="width: 40%; border-radius: 50%;" class="ratio ratio-1x1 mx-auto" alt="...">
+      </div>
+      <div class="col-md-9 text-start bg-success">
+        <p class="card-title text-start text-light pt-3" style="color: #f1b135 !important;">${advisorData.name}</p>
+      </div>
+    </div>
+  </div> {% endcomment %}
+
+
+  <script>
+    var categoryIds = [];
+    // want to access this list in other script
+
+    
+    function addCategoryIdToList(categoryId) {
+      if (!categoryIds.includes(categoryId)) {
+        categoryIds.push(categoryId);
+        console.log(categoryIds)
+      } else {
+        var index = categoryIds.indexOf(categoryId);
+        if (index > -1) {
+          categoryIds.splice(index, 1);
+          console.log(categoryIds)
+        }
+      }
+      var cards = document.getElementsByClassName("card");
+      for (var i = 0; i < cards.length; i++) {
+        if (categoryIds.includes(parseInt(cards[i].id))) {
+          cards[i].classList.add("active");
+        } else {
+          cards[i].classList.remove("active");
+        }
+      }
+    }
+  </script>
+
+
+  <script>
+
+    function removeQuotes(text) {
+      // Use regular expressions to remove both single and double quotes
+      return text.replace(/['"]/g, '');
+    }
+    
+    // Function to create advisor cards and append them to the container
+    function createAdvisorCard(advisorData) {
+      //console.log("this data is coming in response");
+      //console.log(advisorData);
+      const advisorCard = document.createElement("div");
+      advisorCard.className = "col-md-3 py-3 mb-3 hover-border";
+      advisorCard.style.border = "2px solid #d8d6d1";
+      //advisorCard.style.maxHeight = "300px"; // Adjust the maximum height as needed
+      advisorCard.style.overflow = "hidden"; // Add this line to clip overflowing content
+      advisorCard.setAttribute("data-id", advisorData.id);
+      advisorCard.setAttribute("data-response", advisorData.response);
+      advisorCard.setAttribute("onclick", `sendData('${advisorData.id}', '${removeQuotes(advisorData.response)}', '${removeQuotes(advisorData.question)}')`);
+    
+      const cardContent = `
+      
+
+      <div class="container mt-2 card-container p-0" >
+        <div class="card bg-dark row ps-2" data-id="${advisorData.id}">
+            <div class="card-body">
+                <p class="card-text ellipsis-text text-light">${advisorData.response}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <img src="${advisorData.image}" alt="Quote Teller" class="img-fluid rounded-circle">
+            </div>
+            <div class="col-9 align-self-center">
+                <p class="card-text text-yellow"><em>${advisorData.name}</em></p>
+            </div>
+        </div>
+    </div>
+
+      
+      
+      
+      `;
+    
+      advisorCard.innerHTML = cardContent;
+      document.getElementById("advisor-container").appendChild(advisorCard);
+    }
+    
+  
+    // Function to send the user's question to the server and handle the response
+    function quickSearch() {
+
+
+
+      var userInput = document.getElementById("userInput").value;
+
+      if (userInput) {
+        // Show loader while response is not coming
+
+        
+        $("#header-section").slideUp(1000);
+        const loaderDiv = document.createElement("div");
+        loaderDiv.className = "loader";
+        document.body.appendChild(loaderDiv);
+  
+        setTimeout(() => {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Server is not responding. Please try again.',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          loaderDiv.remove();
+        }, 20000);
+  
+        fetch('/ask_question/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ 'userInput': userInput, 'categoriesList': categoryIds })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Remove the loader
+          loaderDiv.remove();
+  
+          // Clear the existing advisor cards
+          document.getElementById("advisor-container").innerHTML = '';
+  
+          // Process and display the advisor data
+          $("#advisor-main-heading").html("<div class='row'><div class='col-md-12 text-center m-auto'>Quick Answers</div><div class='col-md-9 m-auto text-end'><button class='btn btn-yellow btn-sm' style='' onclick='single_multiple_chat()'>Start Chat</button></div></div>");
+          console.log("this is data: ",data)
+          if (data.advisors.length == 0) {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'warning',
+              title: 'Try Again!',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          } else {
+              data.advisors.forEach((advisor) => {
+                  createAdvisorCard(advisor);
+              });
+          }
+        });
+
+
+
+      }
+    else
+    {
+        // Show bootstrap alert for entering a question
+        const alertDiv = document.createElement("div");
+        alertDiv.className = "alert alert-warning alert-dismissible fade show";
+        alertDiv.role = "alert";
+        alertDiv.innerHTML = "Please enter a question.";
+        alertDiv.style.zIndex = "9999";
+
+        const closeButton = document.createElement("button");
+        closeButton.type = "button";
+        closeButton.className = "btn-close";
+        closeButton.setAttribute("data-bs-dismiss", "alert");
+        closeButton.setAttribute("aria-label", "Close");
+
+        alertDiv.appendChild(closeButton);
+        document.body.insertBefore(alertDiv, document.body.firstChild);
+
+        // Remove the alert after 5 seconds
+        setTimeout(() => {
+          alertDiv.remove();
+        }, 2000);
+      
+    }
+  }
+  </script>
+
+  {% comment %} <script>
+    function sendData(id, response, question) {
+      console.log("function is working-----------------------");
+      console.log(id, response);
+  
+      var cardId = id;
+      var cardData = response;
+      var cardQuestion = question;
+  
+      console.log('Clicked card ID: ' + cardId);
+      console.log('Card data: ' + cardData);
+      console.log('Question by User: ' + cardQuestion);
+  
+      // Construct the URL with GET parameters
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/start_ai_chat/";
+  
+      const csrfTokenInput = document.createElement("input");
+      csrfTokenInput.type = "hidden";
+      csrfTokenInput.name = "csrfmiddlewaretoken";
+      csrfTokenInput.value = "{{ csrf_token }}";
+      form.appendChild(csrfTokenInput);
+  
+      const cardIdInput = document.createElement("input");
+      cardIdInput.type = "hidden";
+      cardIdInput.name = "card_id";
+      cardIdInput.value = cardId;
+      form.appendChild(cardIdInput);
+  
+      const cardDataInput = document.createElement("input");
+      cardDataInput.type = "hidden";
+      cardDataInput.name = "card_data";
+      cardDataInput.value = cardData;
+      form.appendChild(cardDataInput);
+  
+      const cardQuestionInput = document.createElement("input");
+      cardQuestionInput.type = "hidden";
+      cardQuestionInput.name = "card_question";
+      cardQuestionInput.value = cardQuestion;
+      form.appendChild(cardQuestionInput);
+  
+      form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        const formData = new FormData(form);
+        fetch(form.action, {
+          method: form.method,
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Data received:", data);
+            const cardId = data.card_id;
+            const url = `/chat/${cardId}`;
+            window.location.href = url;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+  
+      document.body.appendChild(form);
+      form.submit();
+    }
+  </script> {% endcomment %}
+  
+  <script>
+
+    $(document).ready(function(){
+      $("#Expertise-Box").hide();
+    });
+    $("#Expertise-Focus").click(function(){
+      $("#Expertise-Box").toggle();
+    });
+  </script>
+
+
+  {% comment %} panel code script starts here {% endcomment %}
+  <script>
+    var chosenCardsIds = [];
+    var chosenCardData = []
+    var chosenCardQuestion = []
+    var panelName = '';
+    var panelTopic = '';
+
+function sendData(id, response, question) {
+    var card = document.querySelector(`[data-id="${id}"]`);
+    if (card) {
+        if (chosenCardsIds.includes(id)) {
+            var index = chosenCardsIds.indexOf(id);
+            if (index > -1) {
+              chosenCardsIds.splice(index, 1);
+            }
+            card.classList.remove("chosen"); // Remove the "chosen" class
+        } else {
+          chosenCardsIds.push(id);
+            chosenCardData.push(response);
+            chosenCardQuestion.push(question);
+            card.classList.add("chosen"); // Add the "chosen" class
+        }
+        console.log(chosenCardsIds);
+        console.log(response);
+        console.log(question);
+    } else {
+        console.log(`Card with data-id "${id}" not found.`);
+    }
+}
+
+function single_multiple_chat()
+{
+  if(chosenCardsIds.length >=2)
+  {
+    startchat();
+    /*{
+      // Prevent the form from submitting when the button is clicked
+      event.preventDefault();
+
+      // Show bootstrap modal with id "chat-panel"
+      $("#chat-panel").modal("show");
+    }*/
+
+  }
+  else
+  {
+    startchat();
+  }
+
+}
+
+function startchat() {
+  
+    // Prevent the form from submitting when the button is clicked
+      event.preventDefault();
+
+      panelName = document.getElementById("panel-name").value;
+      panelTopic = document.getElementById("panel-topic").value;
+
+      if (chosenCardsIds.length < 1) {
+          console.error("Error: Minimum 1 advisor ID should be in the list to submit");
+          // Show sweet alert with error message
+          Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Select at least one advisor',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          return;
+      }
+
+      // Send the list data to the /start_ai_chat/ URL
+      const csrftoken = "{{ csrf_token }}";
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/start_ai_chat/';
+      form.style.display = 'none';
+
+      // Create hidden input fields for your data
+      const chosenCardsIdsInput = document.createElement('input');
+      chosenCardsIdsInput.type = 'hidden';
+      chosenCardsIdsInput.name = 'advisors_id';
+      chosenCardsIdsInput.value = JSON.stringify(chosenCardsIds);
+      form.appendChild(chosenCardsIdsInput);
+
+      const chosenCardDataInput = document.createElement('input');
+      chosenCardDataInput.type = 'hidden';
+      chosenCardDataInput.name = 'chosenCardData';
+      chosenCardDataInput.value = JSON.stringify(chosenCardData);
+      form.appendChild(chosenCardDataInput);
+
+      const chosenCardQuestionInput = document.createElement('input');
+      chosenCardQuestionInput.type = 'hidden';
+      chosenCardQuestionInput.name = 'chosenCardQuestion';
+      chosenCardQuestionInput.value = JSON.stringify(chosenCardQuestion);
+      form.appendChild(chosenCardQuestionInput);
+
+      const panelNameInput = document.createElement('input');
+      panelNameInput.type = 'hidden';
+      panelNameInput.name = 'panel_name';
+      panelNameInput.value = chosenCardQuestion[0];
+      form.appendChild(panelNameInput);
+
+      const panelTopicInput = document.createElement('input');
+      panelTopicInput.type = 'hidden';
+      panelTopicInput.name = 'panel_topic';
+      panelTopicInput.value = chosenCardQuestion[0];
+      form.appendChild(panelTopicInput);
+
+      const csrfTokenInput = document.createElement('input');
+      csrfTokenInput.type = 'hidden';
+      csrfTokenInput.name = 'csrfmiddlewaretoken';
+      csrfTokenInput.value = csrftoken;
+      form.appendChild(csrfTokenInput);
+
+      // Handle the JSON response
+      form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          fetch(form.action, {
+              method: form.method,
+              body: new FormData(form)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.card_id) {
+                  window.location.href = `/chats/${data.card_id}`;
+              } else {
+                  console.error("Error: No card ID found in the response");
+              }
+          })
+          .catch((error) => {
+              console.error("Error:", error);
+          });
+      });
+
+      // Append the form to the document
+      document.body.appendChild(form);
+      // Submit the form programmatically
+      form.submit();
+
+      }
+      
+
+</script>
+
+
+  
+
+
+
+
+  
+
+</body>
+
+{% endblock %}
+</html>

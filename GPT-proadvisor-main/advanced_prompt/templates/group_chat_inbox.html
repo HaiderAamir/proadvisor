@@ -1,0 +1,1399 @@
+<html>
+
+<head>
+  {% load static %}
+
+  <link rel="stylesheet" href="{% static 'css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/chat_design.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  
+
+
+  <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+  <link rel="shortcut icon" type="image/x-icon" th:href="@{/resources/images/favicon.png}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script src="https://kit.fontawesome.com/20b6f01eda.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+<!-- Font Awesome for the icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.css" />
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+
+  <style>
+    /* Hide scrollbar for Chrome, Edge, and Safari */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    .clipboard {
+      background-color: #212529 !important;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      /* box-shadow: 0 0 10px rgba(0,0,0,0.5); */
+    }
+
+    .clipboard:hover {
+      background-color: #212529 !important;
+      width: 40px;
+      height: 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #userInput {
+      position: relative;
+    }
+
+    #textInput {
+      border-radius: 10px;
+      height: 55px;
+      outline: none;
+      font-size: 16px;
+      padding-right: 40px;
+      /* Adjusted padding for the cursor */
+      position: relative;
+      /* Added position:relative */
+    }
+
+    #buttonInput {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #6c757d;
+    }
+
+    /* Blinking cursor line animation */
+    @keyframes cursorBlink {
+
+      0%,
+      100% {
+        border-right-color: transparent;
+      }
+
+      50% {
+        border-right-color: #000;
+      }
+    }
+
+    #textInput::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 25px;
+      /* Adjusted right position */
+      transform: translateY(-50%);
+      height: 20px;
+      width: 2px;
+      background-color: #000;
+      animation: cursorBlink 1s infinite;
+      box-sizing: border-box;
+    }
+
+    .name-init {
+      background-color: #3a1d59;
+
+    }
+
+    .tooltip-inner {
+      max-width: none; /* Override default max-width */
+      white-space: normal; /* Allow text wrapping */
+      color: black; /* Text color */
+      background-color: #FADA5E; /* Warning color background */
+  }
+  .container {
+    position: relative;
+  }
+
+  #userInput {
+    display: flex;
+    align-items: center;
+    background-color: #343a40; /* Bootstrap bg-dark */
+    border-radius: 10px;
+    height: 55px;
+    padding: 0 10px;
+  }
+
+  #textInput {
+    flex: 1;
+    border: 0;
+    background-color: transparent;
+    outline: none;
+    font-size: 16px;
+    color: white;
+  }
+
+  #buttonContainer {
+    display: flex;
+  }
+
+  #buttonInput, #submitButton {
+    border: 0;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+  }
+
+  #buttonInput {
+    display: block;
+  }
+
+  #submitButton {
+    display: none;
+  }
+
+  .animate-button {
+    animation: pulse-animation 1s ease infinite, listening-animation 2s alternate ease-in-out infinite;
+  }
+  
+  @keyframes pulse-animation {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  @keyframes listening-animation {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  div.d-flex.row:nth-child(1){
+    display: none !important;
+    
+  }
+
+  #advisorSearch::placeholder {
+    color: #000000 !important; 
+}
+
+.btn-yellow:hover{
+  color:#f1b135 !important;
+}
+  
+
+  </style>
+
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.css" />
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+
+</head>
+
+<body class="bgSecondary">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5">
+    <a class="navbar-brand" href="#" onclick="goBack()">
+      <i class="fas fa-arrow-left text-warning"></i>
+    </a>
+    {% comment %} <img src="{{ get_active_advisor_img }}" alt="Advisor Image" id="img-address"
+      class="rounded-circle shadow ms-3" style="width: 50px; height: 50px;"> {% endcomment %}
+
+    <div class="ms-3">
+      {% for d in search_panel %}
+        <div class="row">
+        
+          <div class="col-md-12 pt-2">
+            <p id="panel_id" class="text-white h5 fw-bold text-white d-none" style="font-family:Noto Sans;">{{d.id}}</p>
+            <p class="text-white h5 fw-bold text-white" style="font-family:Noto Sans;">{{d.panel_name}}</p>
+            <p class="h6 text-white" style="font-size: smaller !important;">{% for advisor in d.accountant_info.all %}
+              {{advisor.header_text}},{% endfor %}</p>
+          </div>
+        </div>
+        {% endfor %}
+      
+    </div>
+
+    <div class="ms-auto">
+      <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Add new advisor in panel" style="text-decoration:none">
+        <i class="fa-solid fa-plus text-white me-2" id="add-advisor"></i>
+      </a>
+      <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="ProAdvisor.AI provides non-guaranteed, general guidance. This information is not a professional advice substitute. Please consult experts for crucial decisions. The service is not liable for use outcomes." style="text-decoration:none">
+        <i class="fa-regular fa-circle-question text-white" id="notify"></i>
+      </a>
+    
+  </div>
+
+
+    </div>
+
+  </nav>
+
+  <main class="container pt-1 text-white" id="chatbox" style="overflow-y: auto; max-height: 80vh; position:relative">
+   
+  
+    {% for prompt, responses in panel_message_log %}
+  
+    {% if prompt %}
+    <div class="py-2 d-flex row">
+      <div class="col-md-1">
+        <div class="ms-2 rounded-circle border border-dark shadow bg-dark text-light" alt="Avatar" style="width: 50px !important; height: 50px !important;display: flex;
+          align-items: center;
+          justify-content: center;font-size: larger;background-color: #3a1d59 !important;">{{current_username_char}}</div>
+      </div>
+      <div class="col-md-11">
+        <div class="row">
+          <p class="text-light-cs me-1 fw-bolder mb-0 text-white" style="font-size: 14px;">You</p>
+        </div>
+        <div class="row">
+          <p class="text-white text-light-cs me-1 fw-lighter text-white" style="font-size: 16px !important;"><span>{{prompt}}</span></p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  
+    {% for response in responses %}
+    <div class="w-100 text-white mt-2 py-3 row">
+      <div class="col-md-1">
+        <div>
+          <img src="{{response.accountant_image}}" class="ms-2 rounded-circle border border-dark shadow bg-dark"
+            alt="Avatar" style="width: 50px !important; height: 50px !important;">
+        </div>
+      </div>
+      <div class="col-md-11">
+        <div class="row">
+          <p class="col-md-11 fw-bolder mb-0 text-white" style="font-size: 14px;">
+            {{response.advisor_header_text}}</p>
+        </div>
+
+        <div class="row justify-content-end">
+          <div class="col-md-3 col-lg-2 d-flex justify-content-end">
+            <div onclick="toggleSpeech(`{{response.response}}`)"
+              class="playPauseIcon d-flex align-items-center justify-content-center clipboard float-end"
+              data-bs-toggle="tooltip" data-bs-placement="top" title="Play" style="background-color: #ffffff; width: 30px; height: 30px;">
+              <i id="playPauseIcon" class="fas fa-volume-up text-light"></i>
+            </div>
+  
+            <div onclick="makePdf(`{{response.response}}`)"
+            class="pdfIcon ms-1 d-flex align-items-center justify-content-center clipboard"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"
+            style="background-color: #ffffff; width: 30px; height: 30px;">
+            <i class="fa-regular fa-file-pdf-o" style="color: #d4cfc6;"></i>
+          </div>
+    
+            <div onclick="copyText(`{{response.response}}`)"
+              class="copyIcon ms-1 text-center clipboard d-flex align-items-center justify-content-center"
+              data-bs-toggle="tooltip" data-bs-placement="top" title="Copy" style="background-color: #ffffff; width: 30px; height: 30px;">
+              <i class=" fa-regular fa-clipboard" style="color: #d4cfc6;"></i>
+            </div>
+    
+          </div>
+          
+        </div>
+  
+        <div class="row">
+          <div class class="text-white text-light-cs me-1 fw-lighter"
+            style="overflow-wrap: break-word; font-size: 16px !important;">
+  
+            <p style="white-space: pre-wrap;">{{response.response}}</p>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  
+    {% endfor %}
+  
+    {% load static %}
+  
+    <!-- ... other HTML ... -->
+  
+  </main>
+
+  <div class="container-fluid fixed-bottom mb-3 text-white">
+    <div id="userInput" class="container d-flex px-4 mx-auto bg-dark text-white">
+
+      <input id="textInput" class="w-100 text-white" type="text" placeholder="Ask follow up...." />
+
+      <div id="buttonContainer">
+        <button id="buttonInput" class="btn btn-lg">
+          <i class="fas fa-microphone text-white"></i>
+        </button>
+
+        <button id="submitButton" class="btn btn-lg">
+          <i class="fas fa-paper-plane text-white"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  {% comment %} modal code to show add form for advisor start {% endcomment %}
+  <!-- Modal structure -->
+  <div class="modal fade" id="advisorModal" tabindex="-1" aria-labelledby="advisorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-light" id="advisorModalLabel">Select an Advisor</h1>
+          <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="advisorSearch" class="form-control" placeholder="Search advisors...">
+          <div id="filteredAdvisorsList" class="filtered-advisors-list"></div>
+          <input type="hidden" id="selectedAdvisorId" name="selectedAdvisorId">
+          <input type="text" id="selectedAdvisorName" class="form-control" readonly placeholder="Selected Advisor" style="display: none;">
+      </div>
+      
+        <div class="modal-footer">
+          {% comment %} <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Close</button> {% endcomment %}
+          <button type="button" class="btn btn-sm btn-yellow" id="add-advisor-panel">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% comment %} add advisor from modal end {% endcomment %}
+
+  
+  
+  {% comment %} code for add advisor from datalist start {% endcomment %}
+  <script>
+    $(document).ready(function () {
+        // This should be a global variable or accessible where your script is running
+        var advisors = [
+            {% for advisor in advisors %}
+                { id: {{ advisor.id }}, header_text: '{{ advisor.header_text }}' },
+            {% endfor %}
+        ];
+
+        // Function to filter advisors based on input
+        function filterAdvisors() {
+            var keyword = $('#advisorSearch').val().toLowerCase();
+            var filteredAdvisorsList = $('#filteredAdvisorsList');
+            filteredAdvisorsList.empty();
+
+            // Filter advisors and populate the list
+            advisors.forEach(function (advisor) {
+                if (advisor.header_text.toLowerCase().includes(keyword)) {
+                    var listItem = $('<div class="filtered-advisor-item" data-advisor-id="' + advisor.id + '">' + advisor.header_text + '</div>');
+                    listItem.css('color', '#f1b135'); // Set text color to yellow
+                    listItem.on('click', function () {
+                        selectAdvisor(advisor.id, advisor.header_text);
+                    });
+                    filteredAdvisorsList.append(listItem);
+                }
+            });
+        }
+
+        // Function to select an advisor
+        function selectAdvisor(advisorId, advisorName) {
+            $('#selectedAdvisorId').val(advisorId);
+            $('#selectedAdvisorName').val(advisorName).show();
+            $('#advisorSearch').val(''); // Clear the search input
+            $('#filteredAdvisorsList').empty(); // Clear the filtered advisors list
+        }
+
+        // Event handler for input change
+        $('#advisorSearch').on('input', filterAdvisors);
+    });
+</script>
+
+
+  {% comment %} code for add advisor from datalist end {% endcomment %}
+
+
+
+  
+  <script>
+    let isPlaying = false;
+    let speechSynthesisUtterance;
+
+    // Function to get a female voice
+    function getFemaleVoice() {
+      voices = speechSynthesis.getVoices();
+        return voices[2];
+    }
+
+    function toggleSpeech(text) {
+        console.log(text);
+        if (isPlaying) {
+            stopSpeech();
+        } else {
+            playSpeech(text);
+        }
+    }
+
+    function playSpeech(text) {
+        try {
+            // Initialize the SpeechSynthesisUtterance inside the playSpeech function
+            speechSynthesisUtterance = new SpeechSynthesisUtterance();
+
+            // Set the text to be spoken
+            speechSynthesisUtterance.text = text;
+
+            // Set the voice to a female voice
+            const femaleVoice = getFemaleVoice();
+            if (femaleVoice) {
+                speechSynthesisUtterance.voice = femaleVoice;
+            }
+
+            // Handle events
+            speechSynthesisUtterance.onstart = function () {
+                isPlaying = true;
+            };
+
+            speechSynthesisUtterance.onend = function () {
+                isPlaying = false;
+                var icon = $(".playPauseIcon").find('i');
+                // If the icon is currently stop, change it to play
+                icon.removeClass('fa-stop').addClass('fa-volume-up');
+            };
+
+            speechSynthesisUtterance.onerror = function (event) {
+                console.error('Speech synthesis error:', event);
+                isPlaying = false;
+            };
+
+            // Speak the text
+            window.speechSynthesis.speak(speechSynthesisUtterance);
+        } catch (error) {
+            console.error('Error during speech synthesis setup:', error);
+            isPlaying = false;
+        }
+    }
+
+function stopSpeech() {
+    try {
+        window.speechSynthesis.cancel();
+        isPlaying = false;
+    } catch (error) {
+        console.error('Error stopping speech synthesis:', error);
+        isPlaying = false;
+    }
+}
+
+$(document).ready(function () {
+
+  $(".playPauseIcon").click(function () {
+    
+      var icon = $(this).find('i');
+      
+      if (icon.hasClass('fa-volume-up')) {
+          // If the icon is currently play, change it to stop
+          icon.removeClass('fa-volume-up').addClass('fa-stop');
+      } else if (icon.hasClass('fa-stop')) {
+          // If the icon is currently stop, change it to play
+          icon.removeClass('fa-stop').addClass('fa-volume-up');
+      }
+  });
+  
+});
+
+</script>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+    const buttonInput = document.getElementById('buttonInput');
+    const submitButton = document.getElementById('submitButton');
+    let recognition;
+    
+    buttonInput.addEventListener('click', () => {
+      // Switch to speech recognition
+      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+    
+      recognition.onstart = () => {
+        // Add animation class when recognition starts
+        $("#textInput").css("text-align", "center").val("Listening");
+        buttonInput.classList.add('animate-button');
+      };
+    
+      recognition.onresult = (event) => {
+        
+        const transcript = event.results[0][0].transcript;
+        $("#textInput").css("text-align", "left").val(transcript);
+      };
+    
+      recognition.onend = () => {
+        // Remove animation class when recognition ends
+        buttonInput.classList.remove('animate-button');
+        if(textInput.value=="Listening")
+        {
+          $("#textInput").css("text-align", "left").val("");
+        }
+        recognition.stop();
+        toggleButtons();
+        textInput.focus();
+      };
+    
+      recognition.start();
+      toggleButtons();
+    });
+
+    submitButton.addEventListener('click', () => {
+      // Perform any necessary actions when the submit button is clicked
+      console.log('Text submitted:', textInput.value);
+      // Add additional logic or API calls as needed
+      getBotResponse();
+      toggleButtons();
+    });
+
+    textInput.addEventListener('input', () => {
+      toggleButtons();
+    });
+
+    function toggleButtons() {
+      if (textInput.value.trim() !== '') {
+        buttonInput.style.display = 'none';
+        submitButton.style.display = 'block';
+      } else {
+        buttonInput.style.display = 'block';
+        submitButton.style.display = 'none';
+      }
+    }
+    
+  </script>
+  
+
+  {% comment %} go back function start {% endcomment %}
+  <script>
+
+    $(function () {
+      $('[data-bs-toggle="tooltip"]').tooltip();
+  });
+
+    $(document).ready(function() {
+  });
+   
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+
+  {% comment %} go back function end {% endcomment %}
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript">
+  // When the document is ready
+  $(function() {
+      const savedState = localStorage.getItem('darkMode');
+      if (savedState === 'off') {
+        // Create the link element for the stylesheet
+    var cssLink = $('<link>', {
+      id: 'mode_change',
+      rel: 'stylesheet',
+      href: '{% static "css/lightmode.css" %}' // Use Django template tag here
+    });
+
+    // Append the link element to the head of the document
+    $('head').append(cssLink);
+      }
+    
+  });
+</script>
+
+{% comment %} copy text function  start {% endcomment %}
+<script>
+  function copyText(text) {
+    const textArea = document.createElement('textarea');
+    textArea.style.position = 'fixed';
+    textArea.style.top = 0;
+    textArea.style.left = 0;
+    textArea.style.opacity = 0;
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      console.log('Text copied to clipboard');
+    } catch (err) {
+      console.error('Failed to copy text to clipboard:', err);
+    }
+    document.body.removeChild(textArea);
+  }
+
+  $(document).ready(function () {
+    $(".copyIcon").click(function () {
+      var icon = $(this).find('i');
+      icon.removeClass('fa-clipboard').addClass('fa-circle-check');
+      // After 2 seconds, change the icon back to the clipboard
+      setTimeout(function () {
+        icon.removeClass('fa-circle-check').addClass('fa-clipboard');
+      }, 500);
+    });
+  })
+</script>
+{% comment %} copy text fucntion end {% endcomment %}
+
+<!-- code to makePdf the text start -->
+<script>
+
+  function makePdf(text) {
+    // Create a new jsPDF instance
+    const doc = new jspdf.jsPDF();
+
+     // Set a smaller font size
+  doc.setFontSize(13);
+
+  // Define margins
+  const leftMargin = 10;
+  const rightMargin = 10;
+  const topMargin = 10;
+  const docWidth = doc.internal.pageSize.getWidth();
+
+  // Add text with word wrapping
+  doc.text(text, leftMargin, topMargin, {
+    maxWidth: docWidth - leftMargin - rightMargin
+  });
+
+    // Save the created PDF
+    doc.save('Response.pdf');
+  }
+
+  $(document).ready(function () {
+
+    $(".pdfIcon").click(function () {
+      var icon = $(this).find('i');
+      icon.toggleClass('fa-file-pdf-o fa-circle-check');
+
+      // After 2 seconds, change the icon back to the clipboard
+      setTimeout(function () {
+        icon.toggleClass('fa-circle-check fa-file-pdf-o');
+      }, 2000);
+    });
+  });
+</script>
+
+{% comment %} scroll down the chatbox start {% endcomment %}
+<script>
+  function scrollChatboxDown() {
+    var chatbox = document.getElementById('chatbox');
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  // Attach the function to the window.onload event
+  window.onload = scrollChatboxDown;
+</script>
+
+<!-- Add this loader HTML element -->
+<div class="w-100 text-center m-auto">
+<div id="loader" class="spinner-border text-yellow text-center m-auto" role="status" style="position: absolute;z-index:9999; margin-left:100px; display:none;">
+  <span class="sr-only">Loading...</span>
+</div>
+</div>
+
+
+<script>
+  function close_disclaimer_modal() {
+    var modal = document.getElementById("exampleModal");
+    modal.style.display = "none";
+    // alert("Function close modal working fine!");
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    checkChatboxMessages();
+  });
+
+  function showLoader() {
+    document.getElementById('loader').style.display = 'inline';
+  }
+
+  function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+  }
+
+  function checkChatboxMessages() {
+    var chatbox = document.getElementById('chatbox');
+    var messagesExist = chatbox.hasChildNodes();
+
+    if (!messagesExist) {
+      // No messages present, you can call your function here
+      getBotResponse();
+    }
+  }
+
+  function getBotResponse() {
+    var i = 0;
+    var speed = 50;
+    var rawText = document.getElementById("textInput").value;
+
+    var userHtml = '<div class="py-2 d-flex text-white row"><div class="col-md-1"><div class="ms-2 rounded-circle border border-dark shadow bg-dark text-light" alt="Avatar" style="width: 50px !important; height: 50px !important;display: flex;align-items: center;justify-content: center;font-size: larger;background-color: #3a1d59 !important;">{{current_username_char}}</div></div><div class="col-md-11"><div class="row"><p class="text-light-cs me-1 fw-bolder mb-0" style="font-size: 14px;">You</p></div><div class="row"><p class="text-white text-light-cs me-1 fw-lighter" style="font-size: 16px !important;"><span>' + rawText + '</span></p></div></div></div>';
+    if (userHtml !== "") {
+      document.getElementById("textInput").value = "";
+
+      document.getElementById("chatbox").insertAdjacentHTML('beforeend', userHtml);
+
+      const chatBox = document.getElementById('chat_panel');
+      var targetNode = document.getElementById('chatbox');
+
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          chatBox.scrollTo(0, chatBox.scrollHeight);
+          targetNode.scrollTo(0, targetNode.scrollHeight);
+        });
+      });
+
+      var observerConfig = { childList: true };
+
+      observer.observe(targetNode, observerConfig);
+
+      document.getElementById('userInput').scrollIntoView({ block: 'start', behaviour: 'smooth' });
+
+      // Show loader before making the API request
+      showLoader();
+
+      $.get("/get-panel-chat-response", { msg: rawText }).done(async function (data) {
+        hideLoader();
+
+        const chatboxContainer = document.getElementById('chatbox');
+        var count_turn = 0;
+        console.log("Data: ", data);
+
+        async function typeTextWithDelay(responseText, containerElement) {
+          return new Promise((resolve) => {
+            console.log(responseText);
+            speak = responseText;
+            responseText = responseText.trim();
+            responseText = responseText.replace(new RegExp('\r?\n', 'g'), '<br>');
+            responseText = responseText.replace(/\\n/g, '\n');
+
+            const responseLines = responseText.split('<br>');
+
+            let currentIndex = 0;
+            let charIndex = 0;
+            let delay = 10;
+
+            const typingInterval = setInterval(() => {
+              if (charIndex < responseLines[currentIndex].length) {
+                containerElement.innerHTML += responseLines[currentIndex][charIndex];
+                charIndex++;
+              } else {
+                containerElement.innerHTML += '<br>';
+                currentIndex++;
+                charIndex = 0;
+              }
+              scrollToBottom(document.getElementById("chatbox"));
+              if (currentIndex >= responseLines.length) {
+                clearInterval(typingInterval);
+                resolve();
+              }
+            }, delay);
+          });
+        }
+
+        async function displayTextsOneByOne(texts, chatboxContainer) {
+          for (const text of texts) {
+            const newMessageDiv = document.createElement('div');
+            newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('col-md-1');
+            const avatarImage = document.createElement('img');
+            avatarImage.src = text.accountant_image;
+            avatarImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+            avatarImage.style.width = '50px';
+            avatarImage.style.height = '50px';
+            avatarDiv.appendChild(avatarImage);
+
+            const messageContentDiv = document.createElement('div');
+            messageContentDiv.classList.add('col-md-11');
+            const advisorHeaderText = document.createElement('div');
+            advisorHeaderText.classList.add('row');
+
+            const headerTextContent = document.createElement('p');
+            headerTextContent.classList.add('text-light-cs', 'me-1', 'text-white', 'fw-bolder');
+            headerTextContent.style.fontSize = '14px';
+            headerTextContent.textContent = text.advisor_header_text;
+
+            const messageContentRow = document.createElement('div');
+            messageContentRow.classList.add('row');
+
+            const messageParagraph = document.createElement('p');
+            messageParagraph.classList.add('text-light-cs', 'me-1', 'text-white', 'fw-lighter');
+            messageParagraph.style.fontSize = '16px';
+
+            const cursor = document.createElement('span');
+            const response_text = document.createElement('span');
+            cursor.id = 'typingCursor';
+            cursor.style.display = 'inline-block';
+
+
+            // Create the pdfDiv element
+      const pdfDiv = document.createElement('div');
+      pdfDiv.onclick = function () {
+        makePdf(text.response_message);
+      };
+    
+      pdfDiv.classList.add('pdfIcon', 'ms-1', 'text-center', 'clipboard', 'float-end', 'd-flex', 'align-items-center', 'justify-content-center');
+      pdfDiv.setAttribute('data-bs-toggle', 'tooltip');
+      pdfDiv.setAttribute('data-bs-placement', 'top');
+      pdfDiv.setAttribute('title', 'Pdf');
+      pdfDiv.style.backgroundColor = '#ffffff';
+      pdfDiv.style.width = '30px';
+      pdfDiv.style.height = '30px';
+    
+      const pdfIcon = document.createElement('i');
+      pdfIcon.classList.add('fa-regular', 'fa-file-pdf-o'); // Initial class for the icon
+      pdfIcon.style.color = '#d4cfc6';
+    
+      pdfDiv.appendChild(pdfIcon);
+
+
+            const copyDiv = document.createElement('div');
+            copyDiv.onclick = function () {
+              copyText(text.response_message);
+            };
+            copyDiv.classList.add('copyIcon', 'ms-1', 'text-center', 'clipboard', 'float-end', 'd-flex', 'align-items-center', 'justify-content-center');
+            copyDiv.setAttribute('data-bs-toggle', 'tooltip');
+            copyDiv.setAttribute('data-bs-placement', 'top');
+            copyDiv.style.width = '30px';
+            copyDiv.style.height = '30px';
+            copyDiv.setAttribute('title', 'Copy');
+
+            const copyIcon = document.createElement('i');
+            copyIcon.classList.add('fa-regular', 'text-light', 'fa-clipboard');
+
+            copyDiv.appendChild(copyIcon);
+
+            const playDiv = document.createElement('div');
+            playDiv.onclick = function () {
+              toggleSpeech(text.response_message);
+            };
+
+            playDiv.classList.add('playIcon', 'text-center', 'clipboard', 'float-end', 'd-flex', 'align-items-center', 'justify-content-center');
+            playDiv.setAttribute('data-bs-toggle', 'tooltip');
+            playDiv.setAttribute('data-bs-placement', 'top');
+            playDiv.setAttribute('title', 'Play');
+            playDiv.style.backgroundColor = '#ffffff';
+            playDiv.style.width = '30px';
+            playDiv.style.height = '30px';
+
+            const playIcon = document.createElement('i');
+            playIcon.id = 'playIcon';
+            playIcon.classList.add('fas', 'text-light', 'fa-volume-up');
+
+            playDiv.appendChild(playIcon);
+
+            
+            messageContentDiv.appendChild(copyDiv);
+            messageContentDiv.appendChild(pdfDiv);
+            messageContentDiv.appendChild(playDiv);
+
+            advisorHeaderText.appendChild(headerTextContent);
+            messageContentDiv.appendChild(advisorHeaderText);
+            messageContentDiv.appendChild(messageContentRow);
+            messageContentRow.appendChild(messageParagraph);
+            messageParagraph.appendChild(response_text);
+            messageParagraph.appendChild(cursor);
+
+            newMessageDiv.appendChild(avatarDiv);
+            newMessageDiv.appendChild(messageContentDiv);
+
+            chatboxContainer.appendChild(newMessageDiv);
+            scrollToBottom(chatboxContainer);
+
+            await typeTextWithDelay(text.response_message, response_text);
+            cursorNone(cursor);
+            await new Promise((resolve) => setTimeout(resolve, 10 * 2));
+          }
+        }
+
+        const textsToDisplay = data.response_message_data;
+        console.log(textsToDisplay);
+
+        const container = document.getElementById("chatbox");
+        displayTextsOneByOne(textsToDisplay, container);
+
+        function cursorNone(cursor) {
+          cursor.style.display = 'none';
+        }
+
+        function scrollToBottom(element) {
+          element.scrollTop = element.scrollHeight;
+        }
+
+        const chatBox = document.getElementById('chat_panel');
+        var targetNode = document.getElementById('chatbox');
+
+        var observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            chatBox.scrollTo(0, chatBox.scrollHeight);
+            targetNode.scrollTo(0, targetNode.scrollHeight);
+          });
+        });
+
+        var observerConfig = { childList: true };
+
+        observer.observe(targetNode, observerConfig);
+        document.getElementById('userInput').scrollIntoView({ block: 'start', behaviour: 'smooth' });
+      });
+    }
+  }
+
+  document.getElementById("textInput").addEventListener("keypress", function (e) {
+    if (e.which == 13) {
+      if (document.getElementById("textInput").value.trim() !== "") {
+        getBotResponse();
+        toggleButtons();
+      }
+    }
+  });
+
+</script>
+
+{% comment %} to get list of advisor from api start {% endcomment %}
+
+
+<script>
+  $(document).ready(function() {
+      $('#add-advisor').click(function() {
+          // Fetch all advisors from the API
+          $.ajax({
+              url: '/api/all-advisors/',
+              method: 'GET',
+              success: function(data) {
+                  // Handle the data
+                  console.log(data);
+                  // Display the modal
+                  $('#advisorModal').modal('show');
+                  // Populate the advisor list using Select2
+                  populateAdvisorSelect(data);
+              },
+              error: function(error) {
+                  console.error('Error fetching advisors:', error);
+              }
+          });
+      });
+
+      // Function to populate the advisor list in the modal using Select2
+      function populateAdvisorSelect(advisors) {
+          // Get the select element
+          var advisorSelect = $('#advisorSelect');
+
+          // Add options to the select element
+          advisors.forEach(function(advisor) {
+              var option = new Option(advisor.header_text, advisor.id, false, false);
+              advisorSelect.append(option);
+          });
+
+          // Initialize Select2 after options have been added
+          advisorSelect.select2({
+              placeholder: '-- Select Advisors --',
+              allowClear: true
+          });
+      }
+  });
+</script>{% comment %} to get list of advisor from api end {% endcomment %}
+
+
+
+
+
+{% comment %} <script>
+
+  $(window).on('load', function () {
+    $('#exampleModal').modal('show');
+  });
+
+  function close_disclaimer_modal() {
+    var modal = document.getElementById("exampleModal");
+    modal.style.display = "none";
+    // alert("Function close modal working fine!");
+
+  }
+
+
+  function getBotResponse() {
+
+    var i = 0;
+    var speed = 50;
+    var rawText = $("#textInput").val();
+    
+    // var rawText = "How to pass data from javascript to django view";
+    var userHtml = '<div class="py-2 d-flex text-white row"><div class="col-md-1"><div class="ms-2 rounded-circle border border-dark shadow bg-dark text-light" alt="Avatar" style="width: 50px !important; height: 50px !important;display: flex;align-items: center;    justify-content: center;font-size: larger;background-color: #3a1d59 !important;">{{current_username_char}}</div></div><div class="col-md-11"><div class="row"><p class="text-light-cs me-1 fw-bolder mb-0" style="font-size: 14px;">You</p></div><div class="row"><p class = "text-white text-light-cs me-1 fw-lighter" style="font-size: 16px !important;"><span>' + rawText + '</span></p></div></div></div>';
+    if (userHtml != "") {
+      $("#textInput").val("");
+
+      $("#chatbox").append(userHtml); // added chat in chat box // 
+      const chatBox = document.getElementById('chat_panel');
+      // chatBox.scrollTo(0, chatBox.scrollHeight);
+
+      // Select the element to observe
+      var targetNode = document.getElementById('chatbox');
+
+      // Create a new instance of MutationObserver
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          // console.log('A mutation has occurred:', mutation);
+          chatBox.scrollTo(0, chatBox.scrollHeight);
+          targetNode.scrollTo(0, targetNode.scrollHeight);
+        });
+      });
+
+      // Specify the options for the observer (in this case, observe child list mutations)
+      var observerConfig = { childList: true };
+
+      // Start observing the target node for mutations
+      observer.observe(targetNode, observerConfig);
+
+
+      document.getElementById('userInput').scrollIntoView({ block: 'start', behaviour: 'smooth' });
+      $.get("/get-panel-chat-response", { msg: rawText }).done(async function (data) {
+        const chatboxContainer = document.getElementById('chatbox');
+        var count_turn = 0;
+        console.log("Data: ", data);
+
+        async function typeTextWithDelay(responseText, containerElement) {
+          return new Promise((resolve) => {
+            //adding newline accordingly
+            console.log(responseText)
+            speak=responseText;
+            responseText = responseText.trim();
+            responseText = responseText.replace(new RegExp('\r?\n', 'g'), '<br>');
+
+            console.log("this is regex response", responseText)
+            // Replace '\n' with actual line breaks
+            responseText = responseText.replace(/\\n/g, '\n');
+            
+            // Simulate typing animation
+            const responseLines = responseText.split('<br>');
+
+            let currentIndex = 0;
+            let charIndex = 0;
+            let delay = 10;
+
+            const typingInterval = setInterval(() => {
+              if (charIndex < responseLines[currentIndex].length) {
+                containerElement.innerHTML += responseLines[currentIndex][charIndex];
+                charIndex++;
+              } else {
+                containerElement.innerHTML += '<br>';
+                currentIndex++;
+                charIndex = 0;
+              }
+              scrollToBottom(document.getElementById("chatbox"));
+              if (currentIndex >= responseLines.length) {
+                clearInterval(typingInterval);
+                resolve();
+              }
+            }, delay);
+          });
+
+        }
+
+        async function displayTextsOneByOne(texts, chatboxContainer) {
+          for (const text of texts) {
+            const newMessageDiv = document.createElement('div');
+            newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('col-md-1');
+            const avatarImage = document.createElement('img');
+            avatarImage.src = text.accountant_image;
+            avatarImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+            avatarImage.style.width = '50px';
+            avatarImage.style.height = '50px';
+            avatarDiv.appendChild(avatarImage);
+
+            const messageContentDiv = document.createElement('div');
+            messageContentDiv.classList.add('col-md-11');
+            const advisorHeaderText = document.createElement('div');
+            advisorHeaderText.classList.add('row');
+
+            const headerTextContent = document.createElement('p');
+            headerTextContent.classList.add('text-light-cs', 'me-1', 'text-white', 'fw-bolder');
+            headerTextContent.style.fontSize = '14px';
+            headerTextContent.textContent = text.advisor_header_text;
+
+            const messageContentRow = document.createElement('div');
+            messageContentRow.classList.add('row');
+
+            const messageParagraph = document.createElement('p');
+            messageParagraph.classList.add('text-light-cs', 'me-1', 'text-white', 'fw-lighter');
+            messageParagraph.style.fontSize = '16px';
+
+            const cursor = document.createElement('span');
+            const response_text = document.createElement('span');
+            cursor.id = 'typingCursor';
+            cursor.style.display = 'inline-block';
+
+            // Create the copyDiv element for each message
+            const copyDiv = document.createElement('div');
+            copyDiv.onclick = function () {
+              copyText(text.response_message);
+            };
+            copyDiv.classList.add('copyIcon', 'm-auto', 'text-center', 'clipboard', 'float-end', 'd-flex', 'align-items-center', 'justify-content-center');
+            copyDiv.setAttribute('data-bs-toggle', 'tooltip');
+            copyDiv.setAttribute('data-bs-placement', 'top');
+            copyDiv.style.width = '30px';
+            copyDiv.style.height = '30px';
+            copyDiv.setAttribute('title', 'Copy');
+
+            const copyIcon = document.createElement('i');
+            copyIcon.classList.add('fa-regular','text-light', 'fa-clipboard');
+
+            copyDiv.appendChild(copyIcon);
+
+            const playDiv = document.createElement('div');
+            playDiv.onclick = function () {
+                toggleSpeech(speak); // Assuming responseText is the text you want to speak
+            };
+      
+            playDiv.classList.add('playIcon', 'm-auto','me-2', 'text-center', 'clipboard', 'float-end', 'd-flex', 'align-items-center', 'justify-content-center');
+            playDiv.setAttribute('data-bs-toggle', 'tooltip');
+            playDiv.setAttribute('data-bs-placement', 'top');
+            playDiv.setAttribute('title', 'Play');
+            playDiv.style.backgroundColor = '#ffffff';
+            playDiv.style.width = '30px';
+            playDiv.style.height = '30px';
+      
+            const playIcon = document.createElement('i');
+            playIcon.id = 'playIcon'; // Set a unique id for the play icon
+            playIcon.classList.add('fas','text-light', 'fa-volume-up'); // Initial class for the icon
+      
+            playDiv.appendChild(playIcon);
+
+            // Append the copyDiv to the messageContentDiv
+            messageContentDiv.appendChild(copyDiv);
+            messageContentDiv.appendChild(playDiv); // Add the playDiv
+
+            advisorHeaderText.appendChild(headerTextContent);
+            messageContentDiv.appendChild(advisorHeaderText);
+            messageContentDiv.appendChild(messageContentRow);
+            messageContentRow.appendChild(messageParagraph);
+            messageParagraph.appendChild(response_text);
+            messageParagraph.appendChild(cursor);
+
+            newMessageDiv.appendChild(avatarDiv);
+            newMessageDiv.appendChild(messageContentDiv);
+
+            chatboxContainer.appendChild(newMessageDiv);
+            scrollToBottom(chatboxContainer);
+
+            await typeTextWithDelay(text.response_message, response_text);
+            cursorNone(cursor);
+            await new Promise((resolve) => setTimeout(resolve, 10 * 2)); // Pause between texts
+          }
+        }
+
+
+        const textsToDisplay = data.response_message_data
+        console.log(textsToDisplay);
+
+        //   const typingDelay = 20; // Adjust this value to control typing speed
+        const container = document.getElementById("chatbox");
+        displayTextsOneByOne(textsToDisplay, container);
+
+        function cursorNone(cursor) {
+          cursor.style.display = 'none';
+        }
+
+
+        function scrollToBottom(element) {
+          element.scrollTop = element.scrollHeight;
+        }
+
+       
+        console.log("count", count);
+        const chatBox = document.getElementById('chat_panel');
+        // chatBox.scrollTo(0, chatBox.scrollHeight);
+        var targetNode = document.getElementById('chatbox');
+
+        // Create a new instance of MutationObserver
+        var observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            // console.log('A mutation has occurred:', mutation);
+            chatBox.scrollTo(0, chatBox.scrollHeight);
+            targetNode.scrollTo(0, targetNode.scrollHeight);
+          });
+        });
+
+        // Specify the options for the observer (in this case, observe child list mutations)
+        var observerConfig = { childList: true };
+
+        // Start observing the target node for mutations
+        observer.observe(targetNode, observerConfig);
+        // alert(botHtml);
+        document.getElementById('userInput').scrollIntoView({ block: 'start', behaviour: 'smooth' });
+      });
+    }
+  }
+
+
+  $("#textInput").keypress(function (e) {
+    if (e.which == 13) {
+      if ($.trim($("#textInput").val()) != "") {
+        
+        getBotResponse();
+        toggleButtons();
+      }
+    }
+  });
+
+</script> {% endcomment %}
+{% comment %} main function end {% endcomment %}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Function to simulate typing effect
+    function typeLastMessage() {
+      var chatbox = $('#chatbox');
+      var messageElement = $('#chatbox > div:last-child > div.col-md-11 > div:last-child > div > p');
+      var messageText = messageElement.text();
+      var index = 0;
+
+      // Clear the content before typing effect
+      messageElement.text('');
+
+      function typeCharacter() {
+        messageElement.text(messageText.substr(0, index));
+        index++;
+
+        // Scroll up the chatbox container
+        chatbox.scrollTop(chatbox.prop("scrollHeight"));
+
+        if (index <= messageText.length) {
+          setTimeout(typeCharacter, 10); // Adjust typing speed (milliseconds)
+        }
+      }
+
+      typeCharacter();
+    }
+
+    // Simulate typing effect on the last message
+    typeLastMessage();
+  });
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Check if there are no messages
+    var chatbox = document.getElementById("chatbox");
+    var messages = chatbox.getElementsByClassName("w-100");
+    
+    if (messages.length === 0) {
+      // Show an alert
+      getBotResponse()
+
+    }
+  });
+</script>
+
+{% comment %} add advisor to panel start {% endcomment %}
+<script>
+  $('#add-advisor-panel').click(function () {
+    var selectedAdvisorId = $('#selectedAdvisorId').val();  // Updated to use the hidden input
+    var panelId = $('#panel_id').text();
+
+    if (!selectedAdvisorId) {
+        Swal.fire({
+            icon: 'error',
+            title: 'No Advisor Selected',
+            text: 'Please select an advisor to add to the panel.'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to add the selected advisor to the panel?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Send data to the Django backend using AJAX
+            $.ajax({
+                url: '/add-advisor-panel/',
+                type: 'POST',
+                contentType: 'application/json',  // Specify the content type
+                data: JSON.stringify({ panel_id: panelId, advisor_ids: [selectedAdvisorId] }),  // Wrap advisor_id in an array
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                success: function (response) {
+                    // Handle success
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Advisor Added',
+                        text: 'The selected advisor has been added to the panel successfully.'
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (error) {
+                    // Handle error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while adding the advisor to the panel.'
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'info',
+                title: 'Operation Cancelled',
+                text: 'No changes were made to the panel.'
+            });
+        }
+    });
+});
+
+
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+{% comment %} add advisor to panel end {% endcomment %}
+
+</body>
+
+
+
+</html>

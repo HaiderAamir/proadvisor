@@ -1,0 +1,107 @@
+<head>
+  <style>
+    .nav-item .nav-link :hover *{
+      background-color: #ecc67a !important;
+    }
+
+    #dropdown-create {
+        margin-left: 12px; /* Adjust margin as needed */
+    }
+
+    .dropdown-item {
+        padding: 10px; /* Adjust padding as needed */
+        transition: background-color 0.3s ease; /* Smooth transition effect */
+    }
+
+    .dropdown-item:hover {
+        background-color: #ffd990; /* Hover background color */
+    }
+
+    .dropdown-menu {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Add shadow to the dropdown menu */
+    }
+
+    
+  </style>
+</head>
+
+<div class="nav flex-column bg-dark text-center shadow mt-5" id="sidebar" style="width:12vmin !important;">
+  <li class="nav-item py-2 mt-3">
+      <a class="nav-link text-white fw-bold side-menu-links {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+          <div>
+              <i class="fa fa-home text-white fw-bold" aria-hidden="true"></i>
+          </div>
+          <div class="text-white fw-bold">
+              Home
+          </div>
+      </a>
+  </li>
+  <li class="nav-item py-2">
+      <a class="nav-link text-white fw-bold side-menu-links {% if request.resolver_match.url_name == 'advisors' %}active{% endif %}" href="{% url 'advisors' %}">
+          <div>
+              <i class="fa-solid fa-users-line text-white fw-bold" aria-hidden="true"></i>
+          </div>
+          <div class="text-white fw-bold">
+              Advisors
+          </div>
+      </a>
+  </li>
+  <li class="nav-item py-2">
+    <a class="nav-link text-white fw-bold side-menu-links {% if request.resolver_match.url_name == 'get_favorites' %}active{% endif %}" href="/get_favorites">
+        <div>
+            <i class="fa-solid fa-star text-white fw-bold" aria-hidden="true"></i>
+        </div>
+        <div class="text-white fw-bold">
+            Favorites
+        </div>
+    </a>
+    </li>
+  <li class="nav-item py-2" data-bs-toggle="modal" data-bs-target="#comingsoon">
+      <a class="nav-link text-white fw-bold side-menu-links" href="#">
+          <div>
+              <i class="fas fa-rss text-white fw-bold"></i>
+          </div>
+          <div class="text-white fw-bold">
+              Feed
+          </div>
+      </a>
+  </li>
+  <li class="nav-item py-2">
+    <a id="createLink" class="nav-link text-white fw-bold side-menu-links dropdown-toggle {% if request.path == '/create-professional-panel' %}active{% endif %}" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+        <div>
+            <i class="fas fa-plus text-white fw-bold" aria-hidden="true"></i>
+        </div>
+        <div class="text-white fw-bold">
+            Create
+        </div>
+    </a>
+    <div class="dropdown-menu ms-12 text-white bg-dark" aria-labelledby="dropdownMenuButton" id="dropdown-create">
+        <a class="dropdown-item fw-bold text-white small" href="/create-professional-panel">Create Professional Panel</a>
+        <a class="dropdown-item fw-bold text-white small" href="/create-custom-advisor">Create Custom Advisor</a>
+    </div>
+
+</li>
+
+  <li class="nav-item py-2" style="width:100% !important;padding:0 !important;">
+    <a class="nav-link text-white fw-bold side-menu-links {% if request.path == '/chats' %}active{% endif %}" href="/chats">
+        <div>
+            <i class="fas fa-comments text-white fw-bold"></i>
+        </div>
+        <div class="text-white fw-bold">
+            Chats
+        </div>
+    </a>
+</li>
+  <li class="nav-item py-2" style="width:100% !important;padding:0 !important;" data-bs-toggle="modal" data-bs-target="#comingsoon">
+      <a class="nav-link text-white fw-bold side-menu-links" href="#">
+          <div>
+              <i class="fas fa-satellite-dish text-white fw-bold"></i>
+          </div>
+          <div class="text-white fw-bold">
+              Community
+          </div>
+      </a>
+  </li>
+</div>
+
+

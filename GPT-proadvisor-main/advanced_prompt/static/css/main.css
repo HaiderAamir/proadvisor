@@ -1,0 +1,486 @@
+.side-menu-links {
+    width: 100% !important;
+    font-size: small !important;
+    color: #d8d6d1 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-top: 20% !important;
+  }
+
+  .side-menu-links:hover {
+    background-color: rgb(74, 74, 74);
+  }
+  #searchInput {
+    width: 400px;
+    border-color: #4b4b4b;
+  }
+
+  ::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #d4cfc6 !important;
+    opacity: 0.5 !important;
+    /* Firefox */
+  }
+
+  /* Custom CSS to remove the arrow from the dropdown button */
+  .dropdown-toggle::after {
+    content: none;
+  }
+
+  /* Custom CSS to position the dropdown correctly */
+  .custom-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+  }
+
+  .dropend .dropdown-toggle::after {
+    display: none;
+  }
+
+  /* Style for a checked checkbox */
+#darkModeSwitch:checked {
+  background-color: #f1b135; /* Background color when checked */
+  border-color: #f1b135; /* Border color when checked */
+}
+
+.decoration-none{
+  text-decoration: none;
+}
+
+/* Customizing .bg-secondary to be less dark */
+.bgSecondary {
+  background-color: #111518f7; /* Adjust to your preferred shade */
+}
+
+.fa-2x{
+font-size: 1.25rem !important; /* Adjust as needed */
+}
+
+#sidebar{
+/* position: fixed !important; */
+top: 70 !important;
+bottom: 0 !important;
+height: 100vh !important;
+
+}
+
+.ms-12{
+margin-left: 110px !important;
+}
+
+
+
+
+/* advisor home page css start */
+/* html, */
+    /* body {
+      position: relative;
+      height: 100%;
+    } */
+
+    body {
+      /* background: #eee; */
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #000;
+      margin: 0;
+      padding: 0;
+    }
+
+    .swiper {
+      width: 100%;
+      height: 400px;
+    }
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      /* background: #fff; */
+      display: flex;
+      justify-content: center;
+      width: 15% !important;
+      align-items: center;
+      border-radius: 15px;
+    }
+
+    #swiper-slide-test {
+      text-align: center;
+      font-size: 18px;
+      /* background: #fff; */
+      display: flex;
+      justify-content: center;
+      width: 20% !important;
+      align-items: center;
+      border-radius: 15px;
+    }
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    
+
+    /* my code */
+    .swiper-button-next, .swiper-button-prev {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0px;
+    }
+    .swiper-button-next{
+      margin-right: 30px;
+    }
+    
+    .swiper-button-next::after {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 15px solid white;
+    }
+
+    .swiper-button-prev::after {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 15px solid white;
+      /*transform: rotate(180deg);*/ /* Added this line to rotate the arrow */
+    }
+
+    #card_link{
+      width: 90%;
+    }
+
+    .scroll-y{
+      height: 100vh;
+      width: 100%;
+      overflow-y: scroll;
+    }
+
+    .glass-effect {
+      background-color: rgba(76, 175, 80, 0.4); /* Change the color values to match your desired shade of green */
+      backdrop-filter: blur(100px); /* This creates the glass effect by applying a blur filter to the background */
+  }
+
+  body > div.p-0 > div > div.container-fluid.ms-3.mt-3 > button:hover
+  {
+    color:#3694FA !important;
+  }
+
+  .swiper-button-next, .swiper-button-prev {
+    margin-top: -100px;
+  }
+/* advisor home page css end */
+
+
+
+
+/* home-search page css start */
+.loader {
+    border: 6px solid #f1b135; /* Light grey */
+    border-top: 6px solid #ffffff; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .card.active {
+    border: 2px solid #f1b135;
+  }
+
+  .hover-border:hover {
+    transform: scale(1.05);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 0px 10px 0px #f1b135;
+  }
+
+  .advisor-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .advisor-info p {
+    margin: 0; /* Remove default margin to align text properly */
+    font-style: italic; /* Make the name appear in italics */
+    flex: 1; /* Allow the name to expand and fill available space */
+    white-space: nowrap; /* Prevent the name from wrapping to the next line */
+    overflow: hidden; /* Hide any overflow if the name is too long */
+    text-overflow: ellipsis; /* Add ellipsis if the name overflows */
+    text-align: left !important;
+
+  }
+
+  .ellipsis-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.text-yellow{
+  color: #f1b135;
+}
+
+.btn-yellow{
+  background-color: #f1b135;
+  font-weight: bold !important;
+}
+
+.btn-yellow:hover{
+  border: 2px solid #f1b135;
+  /*background-color: #f1b135;*/
+  font-weight: bold !important;
+}
+
+  
+
+.chosen {
+  border: 2px solid #f1b135 !important; /* Add your chosen card styling here */
+}
+/* Highlight only the first 3 cards */
+
+#advisor-container > div:nth-child(-n+3){
+  border: 2px solid #f1b135; /* Add a border to highlight */
+  box-shadow: 0px 0px 10px 0px #f1b135;
+}
+  
+.form-control{
+border: 0px !important;
+border-bottom: 2px solid #f1b135 !important;
+border-radius: 0px !important;
+}
+
+.form-control:focus {
+  border: 0px !important;
+  border-bottom: 2px solid #f1b135 !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;  
+}
+
+.btn-close{
+  color: #f1b135 !important;
+}
+
+.modal{
+  --bs-modal-header-border-color: #242525 !important;
+  --bs-modal-footer-border-color: #242525 !important;
+}
+  
+.fs-6 {
+  font-size: .95rem !important; /* or any size that suits your needs */
+}
+  
+.img-xs{
+  width: 40px;
+  height: 40px;
+}
+/* home-search page css end */
+
+
+
+
+/* home page start */
+.swiper {
+  width: 100% !important;
+  height: 265px !important;
+}
+
+.catswiper {
+  height: 55px !important;
+}
+
+.swiper-slide {
+  text-align: center !important;
+  font-size: 18px !important;
+  display: flex !important;
+  justify-content: center !important;
+  width: 181px !important;
+  align-items: center !important;
+  border-radius: 15px !important;
+}
+
+
+
+.catswiper-slide {
+  text-align: center !important;
+  font-size: 12px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-radius: 15px !important;
+  top: 0 !important;
+}
+
+
+
+
+
+
+/* my code */
+.swiper-button-next, .swiper-button-prev {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 0px; */
+}
+.swiper-button-next{
+  margin-right: 30px;
+}
+
+.swiper-button-next::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 15px solid white;
+}
+
+.swiper-button-prev::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 15px solid white;
+  /*transform: rotate(180deg);*/ /* Added this line to rotate the arrow */
+}
+
+
+
+
+
+
+
+.header_text {
+/* font-weight: lighter !important; */
+color:#dbd7d1;
+/* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+font-family:Calibri;
+}
+
+.tagline_text {
+font-weight: 50 !important;
+color:#c5c0b7;
+font-size: 11px !important;
+/* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+font-family:Verdana;
+}
+
+
+
+/* my css*/
+
+
+.category-swiper{
+font-size: 12px !important;
+width: auto !important;
+justify-content: center !important;
+align-items: center !important;
+/* background-color: #2473ae !important; */
+}
+
+.active, .category-swiper:hover{
+background-color: #424242 !important;
+color: #c5c0b7 !important;
+}
+
+.swiper-slide:hover .title-category {
+color: #ffffff !important;
+font-weight: bolder !important;
+background-color: #424242 !important;
+}
+
+
+#card_row > div{
+background-color: #2e2e2e !important;
+}
+
+
+:root {
+--hover-color: #424242;
+}
+
+.align-center{
+margin: auto 20px auto 10px !important;
+}
+
+.align-center-down{
+margin: -50px 20px auto 10px !important;
+}
+
+.swiper-button-prev:hover{
+background-color: #424242 !important;
+}
+
+.swiper-button-next:hover{
+background-color: #424242 !important;
+}
+.swiper-slide-test:hover{
+background-color: #2e2e2e !important;
+}
+.occupation-btn-1, .occupation-btn-2
+{
+border-radius: 5px !important;
+position: absolute !important;
+height: 100% !important;
+width: 30px;
+top: 85px !important;
+right: 10 !important;
+transform: translateY(-50%) !important;
+margin-right: 0px !important;
+}
+.occupation-btn-2{
+left: 0px !important;
+}
+
+/* home page end */
+
+
+
+/* chat.html css style start*/
+
+.panel-image-container {
+  max-width: 30px;
+  height: 30px;
+  margin-left: -10px;
+  border-radius: 50%;
+
+}
+
+.chat-hover:hover h6{
+  color: #ffd990 !important;
+  font-weight: bolder;
+}
+
+.chat-hover:hover img{
+  box-shadow: 0px 3px 15px #847f78;
+}
+
+/* chat.html css style end */

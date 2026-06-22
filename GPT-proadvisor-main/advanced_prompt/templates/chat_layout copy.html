@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+  <link rel="shortcut icon" type="image/x-icon" th:href="@{/resources/images/favicon.png}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../static/css/header.css">
+  <link rel="stylesheet" href="../static/css/chat_design.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <script src="https://kit.fontawesome.com/20b6f01eda.js" crossorigin="anonymous"></script>
+
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+      background-color: transparent;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 5px;
+    }
+
+    @media (min-width: 1400px) {
+
+      .container,
+      .container-lg,
+      .container-md,
+      .container-sm,
+      .container-xl,
+      .container-xxl {
+        max-width: 1100px;
+      }
+    }
+
+    body {
+      font-family: Noto Sans !important;
+    }
+
+    /*.typing::after {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 20px;
+      margin-left: 5px;
+      background-color: #353333;
+      animation: typing 1s infinite;
+    }*/
+
+    @keyframes typing {
+      0% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.5;
+      }
+    }
+
+    /*.text-light-cs {
+      font-size: 0.9rem;
+      white-space: 2px;
+    }*/
+
+    /*#typingCursor {
+      display: none;
+      border-radius: 1px;
+      width: 15px;
+      height: 20px;
+      background-color: white;
+      animation: blink 0.7s infinite;
+    }*/
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: larger;
+      background-color: #3a1d59;
+      color: white;
+      border-radius: 50%;
+      margin-left: 5px;
+    }
+
+    /*.typing::after {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 20px;
+      margin-left: 5px;
+      background-color: #353333;
+      animation: typing 1s infinite;
+    }*/
+
+    @keyframes typing {
+      0% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.5;
+      }
+    }
+
+    .col-md-11 * {
+      color: #d4cfc6 !important;
+      line-height: 1.8;
+    }
+
+    .col-md-11>h1 {
+      font-size: 24px !important;
+      font-weight: bold !important;
+    }
+
+    .col-md-11>h2 {
+      font-size: 22px !important;
+      font-weight: bold !important;
+    }
+
+    .col-md-11>h3 {
+      font-size: 22px !important;
+      font-weight: bold !important;
+    }
+
+    .col-md-11>h4 {
+      font-size: 21px !important;
+      font-weight: bold !important;
+    }
+
+    .col-md-11>h5 {
+      font-size: 20px !important;
+      font-weight: bold !important;
+    }
+
+    .col-md-11>h6 {
+      font-size: 19px !important;
+      font-weight: bold !important;
+    }
+
+    .col-md-11>p {
+      font-size: 16px !important;
+      font-weight: normal !important;
+    }
+
+    #chatbox>div>div.col-md-11>p {
+      padding-top: 0.5rem;
+    }
+
+    p {
+      line-height: 1.5;
+      /* Adjust the value as needed */
+    }
+
+    .clipboard {
+      background-color: #212529 !important;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      /* box-shadow: 0 0 10px rgba(0,0,0,0.5); */
+    }
+
+    .clipboard:hover {
+      background-color: #212529 !important;
+      width: 40px;
+      height: 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body style="background-color: #212529 !important;">
+
+  <div class="">
+    
+  </div>
+  <div class=" container-fluid bg-secondary mx-auto" style="height: 100%;background-color: #292929 !important;"
+  id="myForm">
+  <div class="container mx-auto" class="chat_panel" style="height: 82%; width: 65%;">
+    <div class="p-2 h-auto container-fluid ms-1 w-100">
+
+      {% for d in data %}
+      <div class="row">
+        <div class="col-md-1 mt-3">
+          <a href="{% url 'home' %}" class="btn-secondary text-white"><svg xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 648 712" class="text-center border-light" style="stroke-width: 35px;">
+              <path
+                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"
+                style="fill: #d4cfc6; stroke: black;margin:auto;" />
+            </svg>
+          </a>
+        </div>
+        <div class="col-md-auto">
+          <img src="{{d.accountant_image.url}}" id="img-address" class="rounded-circle border border-dark shadow"
+            alt="Avatar" style="width: 70px; height: 70px;display: none;">
+        </div>
+        <div class="col-md-9 pt-2">
+          <p class="text-white h5 fw-bold" style="font-family:Noto Sans;color: #d4cfc6;">{{d.header_text}}</p>
+          <p class="h6" style="color: #888;">{{d.tagline_text}}</p>
+          <p id="context" class="text-white w-100" hidden>{{d.context}}</p>
+          <p class="text-warning" style="font-size: 10px;">{{disclaimer_data.disclaimer_text}}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="container-fluid" style="height: 80vh;">
+      <div class="container text-white h-auto p-1 overflow-y-auto w-100"
+        style="min-height: 10%;width: 100%;max-height: 90%; font-size: 20px;overflow-y: auto !important;overflow-x: hidden !important;"
+        id="chatbox">
+
+        {% for message in message_log %}
+
+        {% if message.message_type == "a" %}
+
+        <div class="w-100 text-white mt-2 py-3 row">
+          <div class="col-md-1">
+            <div>
+              <img src="{{get_active_advisor_img}}" class="ms-2 rounded-circle border border-dark shadow bg-dark"
+                alt="Avatar" style="width: 50px !important; height: 50px !important;">
+            </div>
+          </div>
+
+          <div class="col-md-11">
+            <div onclick="copyText(`{{message.content}}`)" class="copyIcon m-auto text-center clipboard float-end"
+              data-bs-toggle="tooltip" data-bs-placement="top" title="Copy">
+              <i class=" fa-regular fa-clipboard" style="color: #d4cfc6;"></i>
+            </div>
+            <div class="col-md-11">
+              <div class class="text-white text-light-cs me-1 fw-lighter"
+                style="overflow-wrap: break-word; font-size: 16px !important;color: #d4cfc6 !important;">
+
+                <p style="white-space: pre-wrap;">{{message.content}}</p>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+
+        {% if message.message_type == "u" %}
+
+        <div class="py-2 d-flex row">
+          <div class="col-md-1">
+            <div class="ms-2 rounded-circle border border-dark shadow bg-dark" alt="Avatar"
+              style="width: 50px !important; height: 50px !important;display: flex; align-items: center; justify-content: center;font-size: larger;background-color: #3a1d59 !important;">
+              {{current_username_char}}</div>
+          </div>
+          <div class="col-md-11">
+            <p class="text-white text-light-cs me-1 fw-lighter"
+              style="font-size: 16px !important;color: #d4cfc6 !important;">{{message.content}}</p>
+          </div>
+        </div>
+        {% endif %}
+
+
+
+        {% endfor %}
+
+        <br />
+      </div>
+    </div>
+
+    <div class="container-fluid fixed-bottom mb-3">
+      <div id="userInput" class="container d-flex px-4 mx-auto"
+        style="background-color:#484848;border-radius: 10px !important; height: 55px;">
+        <input id="textInput" class="w-100 text-white border-0" type="text"
+          style="outline: none !important;background-color:#484848; font-size: 16px;" name="msg"
+          placeholder="Message" />
+        <button id="buttonInput" class="btn border-0 btn-lg text-secondary" style="background-color:#484848;"
+          type="submit"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+
+
+
+  </div>
+  </div>
+
+  <div class="test text-white"></div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function copyText(text) {
+      const textArea = document.createElement('textarea');
+      textArea.style.position = 'fixed';
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.opacity = 0;
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+
+      try {
+        document.execCommand('copy');
+        console.log('Text copied to clipboard');
+      } catch (err) {
+        console.error('Failed to copy text to clipboard:', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    $(document).ready(function () {
+      $(".copyIcon").click(function () {
+        var icon = $(this).find('i');
+        icon.removeClass('fa-clipboard').addClass('fa-circle-check');
+        // After 2 seconds, change the icon back to the clipboard
+        setTimeout(function () {
+          icon.removeClass('fa-circle-check').addClass('fa-clipboard');
+        }, 500);
+      });
+    })
+  </script>
+
+  <!-- <script>
+
+    const promptMessages = [];
+    const responseMessages = [];
+    // {% for message in message_log %}
+
+    
+    // promptMessages.push(`{{ message.content }}`);
+    // responseMessages.push(`{{ message.content }}`);
+    // Iterate through the message_log array passed from the Django context
+
+    console.log("this is messages coming:", '{{ message.content }}')
+    message_log.forEach(message => {
+        if (message.role === "u") {
+            promptMessages.push(message.content);
+        } else if (message.type === "a") {
+            responseMessages.push(message.content);
+        }
+    });
+    // {% endfor %}
+  
+    // Display messages
+    const chatboxContainer = document.getElementById('chatbox');
+  
+    for (let i = 0; i < promptMessages.length; i++) {
+      // Create and append prompt message
+      const promptMessageDiv = document.createElement('div');
+      promptMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+  
+      const userAvatarDiv = document.createElement('div');
+      userAvatarDiv.classList.add('col-md-1');
+  
+      // Create the user's avatar div with the first letter of their name
+      const userAvatar = document.createElement('div');
+      userAvatar.textContent = "{{current_username_char}}".charAt(0).toUpperCase();
+      userAvatar.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+      userAvatar.style.width = '50px';
+      userAvatar.style.height = '50px';
+      userAvatar.style.display = 'flex';
+      userAvatar.style.alignItems = 'center';
+      userAvatar.style.justifyContent = 'center';
+      userAvatar.style.fontSize = 'larger';
+      userAvatar.style.backgroundColor = '#3a1d59';
+      userAvatarDiv.appendChild(userAvatar);
+  
+      const promptMessageContentDiv = document.createElement('div');
+      promptMessageContentDiv.classList.add('col-md-11');
+  
+      const promptMessageContainer = document.createElement('div');
+      promptMessageContainer.classList.add('typing');
+  
+      const promptMessageParagraph = document.createElement('p');
+      promptMessageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      promptMessageParagraph.style.fontSize = '16px';
+      promptMessageParagraph.style.color = '#d4cfc6';
+  
+      // Apply regex-based formatting here
+      // const formattedPromptMessage = promptMessages[i].replace(/your-regex-here/g, 'replacement-text');
+      const formattedPromptMessage = promptMessages[i].replace(new RegExp('\r?\n','g'), '<br>');
+  
+      promptMessageParagraph.innerHTML = formattedPromptMessage;
+  
+      promptMessageContainer.appendChild(promptMessageParagraph);
+      promptMessageContentDiv.appendChild(promptMessageContainer);
+  
+      promptMessageDiv.appendChild(userAvatarDiv);
+      promptMessageDiv.appendChild(promptMessageContentDiv);
+      chatboxContainer.appendChild(promptMessageDiv);
+
+      // Create and append response message
+      const responseMessageDiv = document.createElement('div');
+      responseMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+  
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+  
+      // Create the advisor's avatar div with the image
+      const advisorImage = document.createElement('img');
+      advisorImage.src = "{{get_active_advisor_img}}";
+      advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+      advisorImage.style.width = '50px';
+      advisorImage.style.height = '50px';
+      avatarDiv.appendChild(advisorImage);
+  
+      const responseContentDiv = document.createElement('div');
+      responseContentDiv.classList.add('col-md-11');
+  
+      const responseContainer = document.createElement('div');
+      responseContainer.classList.add('typing');
+  
+      const responseParagraph = document.createElement('p');
+      responseParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      responseParagraph.style.fontSize = '16px';
+      responseParagraph.style.color = '#d4cfc6';
+  
+      // Apply regex-based formatting here
+      // const formattedResponseMessage = responseMessages[i].replace(/your-regex-here/g, 'replacement-text');
+      const formattedResponseMessage = responseMessages[i].replace(new RegExp('\r?\n','g'), '<br>');
+  
+      responseParagraph.innerHTML = formattedResponseMessage;
+  
+      responseContainer.appendChild(responseParagraph);
+      responseContentDiv.appendChild(responseContainer);
+      responseMessageDiv.appendChild(avatarDiv);
+      responseMessageDiv.appendChild(responseContentDiv);
+      chatboxContainer.appendChild(responseMessageDiv);
+    }
+
+    // Scroll to the last message
+    function scrollToLastMessage() {
+      chatboxContainer.scrollTop = chatboxContainer.scrollHeight;
+    }
+  
+    // Call the function to scroll to the last message after messages are loaded
+    window.onload = function() {
+      scrollToLastMessage();
+    };
+</script> -->
+
+
+  <script>
+
+
+    // Get all messages from message log and store them in an array
+    /*const messages = [];
+    {% for message in message_log %}
+      messages.push(`{{ message.prompt_message }}`);
+      messages.push(`{{ message.response_message }}`);
+    {% endfor %}
+
+
+
+    console.log("this is prompt message: ",messages[3] )
+
+
+      const testDiv = document.createElement('div');
+      testDiv.classList.add('test');
+      //responseText = responseText.replace(new RegExp('\r?\n','g'), '<br>');
+
+      //const regex = /hidden regex/;
+      const matchedText = messages[3].replace(new RegExp('\r?\n','g'), '<br>');
+
+      console.log("new text here:",matchedText)
+      testDiv.innerHTML = matchedText
+      document.querySelector('.test').appendChild(testDiv);*/
+
+
+
+    // Function to append a message to the chatbox
+    function appendMessage(message, isUserMessage = false) {
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+
+      if (!isUserMessage) {
+        // Create the advisor's avatar div with the image
+        const advisorImage = document.createElement('img');
+        advisorImage.src = "{{get_active_advisor_img}}";
+        advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+        advisorImage.style.width = '50px';
+        advisorImage.style.height = '50px';
+        avatarDiv.appendChild(advisorImage);
+
+      } else {
+        // Create the user's avatar div with the first letter of their name
+        const usernameFirstLetter = "{{current_username_char}}".charAt(0).toUpperCase();
+        avatarDiv.innerHTML = `<div class="user-avatar">${usernameFirstLetter}</div>`;
+      }
+
+      const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+
+      const messageParagraph = document.createElement('p');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+      messageParagraph.innerHTML = message;
+
+      newMessageDiv.appendChild(avatarDiv);
+      newMessageDiv.appendChild(messageContentDiv);
+      messageContentDiv.appendChild(messageParagraph);
+
+      chatboxContainer.appendChild(newMessageDiv);
+
+
+      scrollToBottom(chatboxContainer);
+
+
+    }
+
+    function scrollToBottom(element) {
+      element.scrollTop = element.scrollHeight;
+    }
+
+    $("#textInput").keypress(function (e) {
+      if (e.which == 13) {
+        var rawText = $("#textInput").val();
+        appendMessage(rawText, true); // Append user message
+        $("#textInput").val(""); // Clear the input field
+        getBotResponse(rawText);
+      }
+    });
+
+    $("#buttonInput").click(function () {
+      var rawText = $("#textInput").val();
+      appendMessage(rawText, true); // Append user message
+      $("#textInput").val(""); // Clear the input field
+      getBotResponse(rawText);
+    });
+
+
+    function typeResponse(responseText) {
+
+      console.log(responseText)
+
+
+      responseText = responseText.trim();
+      responseText = responseText.replace(new RegExp('\r?\n', 'g'), '<br>');
+
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+
+      // Create the advisor's avatar div with the image
+      const advisorImage = document.createElement('img');
+      advisorImage.src = "{{get_active_advisor_img}}";
+      advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+      advisorImage.style.width = '50px';
+      advisorImage.style.height = '50px';
+      avatarDiv.appendChild(advisorImage);
+
+      // Create the copyDiv element
+      const copyDiv = document.createElement('div');
+      copyDiv.onclick = function () {
+        copyText(responseText);
+      };
+      copyDiv.classList.add('copyIcon', 'm-auto', 'text-center', 'clipboard', 'float-end');
+      copyDiv.setAttribute('data-bs-toggle', 'tooltip');
+      copyDiv.setAttribute('data-bs-placement', 'top');
+      copyDiv.setAttribute('title', 'Copy');
+
+      const copyIcon = document.createElement('i');
+      copyIcon.classList.add('fa-regular', 'fa-clipboard');
+      copyIcon.style.color = '#d4cfc6';
+
+      copyDiv.appendChild(copyIcon);
+
+      // Create the messageContentDiv
+      const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+
+      const responseContainer = document.createElement('div');
+      responseContainer.classList.add('typing');
+
+      const messageParagraph = document.createElement('div');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+
+      // Replace '\n' with actual line breaks
+      // responseText = responseText.replace(/\\n/g, '\n');
+      // messageParagraph.innerHTML = responseText; // Set the message content
+
+      responseContainer.appendChild(messageParagraph);
+      messageContentDiv.appendChild(copyDiv); // Add the copyDiv
+      messageContentDiv.appendChild(responseContainer); // Add the message content
+      newMessageDiv.appendChild(avatarDiv); // Add the advisor's avatar
+      newMessageDiv.appendChild(messageContentDiv);
+      chatboxContainer.appendChild(newMessageDiv);
+
+      scrollToBottom(chatboxContainer);
+
+      // Simulate typing animation
+      const responseLines = responseText.split('<br>');
+      let lineIndex = 0;
+      let charIndex = 0;
+
+      function typeNextCharacter() {
+        if (lineIndex < responseLines.length) {
+          const line = responseLines[lineIndex];
+          if (charIndex < line.length) {
+            messageParagraph.innerHTML += line[charIndex];
+            charIndex++;
+            setTimeout(typeNextCharacter, 20); // Adjust the typing speed here
+          } else {
+            messageParagraph.innerHTML += '<br>'; // Make paragraphs in this section so the br tag can work
+            lineIndex++;
+            charIndex = 0;
+            setTimeout(typeNextCharacter, 0); // Delay before starting the next line
+          }
+        }
+        scrollToBottom(chatboxContainer); // Scroll to the bottom automatically if the text increased
+      }
+
+      typeNextCharacter();
+
+    }
+
+
+
+
+    /*function typeResponse(responseText) {
+      console.log(responseText)
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+    
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+    
+      // Create the advisor's avatar div with the image
+      const advisorImage = document.createElement('img');
+      advisorImage.src = "{{get_active_advisor_img}}";
+      advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+      advisorImage.style.width = '50px';
+      advisorImage.style.height = '50px';
+      avatarDiv.appendChild(advisorImage);
+    
+      const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+    
+      const responseContainer = document.createElement('div');
+      responseContainer.classList.add('typing');
+    
+      const messageParagraph = document.createElement('p');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+    
+      responseContainer.appendChild(messageParagraph);
+      messageContentDiv.appendChild(responseContainer);
+      newMessageDiv.appendChild(avatarDiv); // Add the advisor's avatar
+      newMessageDiv.appendChild(messageContentDiv);
+      chatboxContainer.appendChild(newMessageDiv);
+      scrollToBottom(chatboxContainer);
+    
+      // Split the response text into characters for typing animation
+      const responseCharacters = responseText.split('');
+      let index = 0;
+      const typingInterval = setInterval(function () {
+        if (index < responseCharacters.length) {
+          messageParagraph.innerHTML += responseCharacters[index];
+          index++;
+        } else {
+          clearInterval(typingInterval); // Stop typing animation when done
+        }
+      }, 50); // Adjust the typing speed by changing the delay (50ms in this example)
+    }
+    */
+
+    // Other functions and code as in your original implementation
+
+
+    /* 2function typeResponse(responseText) {
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+    
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+    
+      // Create the advisor's avatar div with the image
+      const advisorImage = document.createElement('img');
+      advisorImage.src = "{{get_active_advisor_img}}";
+      advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+      advisorImage.style.width = '50px';
+      advisorImage.style.height = '50px';
+      avatarDiv.appendChild(advisorImage);
+    
+      const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+    
+      const responseContainer = document.createElement('div');
+      responseContainer.classList.add('typing');
+    
+      const messageParagraph = document.createElement('p');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+    
+      responseContainer.appendChild(messageParagraph);
+      messageContentDiv.appendChild(responseContainer);
+      newMessageDiv.appendChild(avatarDiv); // Add the advisor's avatar
+      newMessageDiv.appendChild(messageContentDiv);
+      chatboxContainer.appendChild(newMessageDiv);
+      scrollToBottom(chatboxContainer);
+    
+      // Split the response text into characters for typing animation
+      const responseCharacters = responseText.split('');
+      let index = 0;
+      const typingInterval = setInterval(function () {
+        if (index < responseCharacters.length) {
+          messageParagraph.innerHTML += responseCharacters[index];
+          index++;
+        } else {
+          clearInterval(typingInterval); // Stop typing animation when done
+        }
+      }, 50); // Adjust the typing speed by changing the delay (50ms in this example)
+    } 2*/
+
+
+    /*function typeResponse(responseText) {
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+    
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+    
+      // Create the advisor's avatar div with the image
+      const advisorImage = document.createElement('img');
+      advisorImage.src = "{{get_active_advisor_img}}";
+      advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+      advisorImage.style.width = '50px';
+      advisorImage.style.height = '50px';
+      avatarDiv.appendChild(advisorImage);
+    
+      const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+    
+      const responseContainer = document.createElement('div');
+      responseContainer.classList.add('typing');
+    
+      const messageParagraph = document.createElement('p');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+    
+      responseContainer.appendChild(messageParagraph);
+      messageContentDiv.appendChild(responseContainer);
+      newMessageDiv.appendChild(avatarDiv); // Add the advisor's avatar
+      newMessageDiv.appendChild(messageContentDiv);
+      chatboxContainer.appendChild(newMessageDiv);
+      scrollToBottom(chatboxContainer);
+    
+      // Parse the HTML response and apply styling while typing
+      const parser = new DOMParser();
+      const responseDoc = parser.parseFromString(responseText, 'text/html');
+      const responseElements = responseDoc.body.children;
+    
+      let index = 0;      
+      const typingInterval = setInterval(function () {
+        if (index < responseElements.length) {
+          const clonedElement = responseElements[index].cloneNode(true);
+          messageParagraph.appendChild(clonedElement);
+          index++;
+        } 
+      else {
+         clearInterval(typingInterval); // Stop typing animation when done
+      }
+      }); // Adjust the typing speed by changing the delay (50ms in this example)
+    }*/
+
+
+
+
+
+    function getBotResponse(rawText) {
+      $.get("/get", { msg: rawText }).done(function (data) {
+        typeResponse(data);
+      });
+    }
+  </script>
+
+
+  {% comment %}
+  <script>
+    // Function to append a message to the chatbox
+    function appendMessage(message, isUserMessage = false) {
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+
+      // Create the user's avatar div with the first letter of their name
+      const usernameFirstLetter = "{{current_username_char}}".charAt(0).toUpperCase();
+      avatarDiv.innerHTML = `<div class="user-avatar">${usernameFirstLetter}</div>`;
+
+      const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+
+      const messageParagraph = document.createElement('p');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+      messageParagraph.innerHTML = message;
+
+      newMessageDiv.appendChild(avatarDiv);
+      newMessageDiv.appendChild(messageContentDiv);
+      messageContentDiv.appendChild(messageParagraph);
+
+      chatboxContainer.appendChild(newMessageDiv);
+      scrollToBottom(chatboxContainer);
+    }
+
+    function scrollToBottom(element) {
+      element.scrollTop = element.scrollHeight;
+    }
+
+    $("#textInput").keypress(function (e) {
+      if (e.which == 13) {
+        var rawText = $("#textInput").val();
+        appendMessage(rawText, true); // Append user message
+        $("#textInput").val(""); // Clear the input field
+        getBotResponse(rawText);
+      }
+    });
+
+    $("#buttonInput").click(function () {
+      var rawText = $("#textInput").val();
+      appendMessage(rawText, true); // Append user message
+      $("#textInput").val(""); // Clear the input field
+      getBotResponse(rawText);
+    });
+
+    function typeResponse(responseText) {
+      const responseContainer = document.getElementById('responseContainer');
+      responseContainer.innerHTML = '';
+
+      for (let i = 0; i < responseText.length; i++) {
+        setTimeout(function () {
+          responseContainer.innerHTML += responseText.charAt(i);
+        }, i * 50);
+      }
+    }
+
+    function getBotResponse(rawText) {
+      $.get("/get", { msg: rawText }).done(function (data) {
+        typeResponse(data);
+      });
+    }
+  </script>
+
+  <script>
+    function copyText(text) {
+      // Create a temporary textarea element to hold the text
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+
+      // Append the textarea to the document
+      document.body.appendChild(textarea);
+
+      // Select the text in the textarea
+      textarea.select();
+
+      // Copy the selected text to the clipboard
+      document.execCommand('copy');
+
+      // Remove the temporary textarea
+      document.body.removeChild(textarea);
+    }
+  </script>
+
+  {% endcomment %}
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+</body>
+
+</html>

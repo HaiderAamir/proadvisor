@@ -1,0 +1,12 @@
+advanced_prompt/__pycache__
+advanced_prompt/migrations
+advanced_prompt_for_accountants/__pycache__
+advanced_prompt_for_accountants/settings.py
+env
+advanced_prompt/__pycache__
+*.pyc
+advanced_prompt_for_accountants/__pycache__/settings.cpython-311.pyc
+db_advance_prompt
+__pycache__/
+*/settings.py
+

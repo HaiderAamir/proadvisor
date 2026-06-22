@@ -1,0 +1,454 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .img-account-profile {
+        height: 10rem;
+    }
+
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.1);
+        /* Add shadow effect */
+    }
+
+    .card .card-header {
+        font-weight: 500;
+    }
+
+    .card-header:first-child {
+        border-radius: 0.35rem 0.35rem 0 0;
+    }
+
+    .card-header {
+        padding: 1rem 1.35rem;
+        margin-bottom: 0;
+        background-color: rgba(33, 40, 50, 0.03);
+        border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+    }
+
+    .form-control,
+    .dataTable-input {
+        display: none;
+        /* Hide all form controls initially */
+        width: 100%;
+        /* padding: 0.75rem;  */
+        /* font-size: 0.875rem; */
+        font-weight: 400;
+        /* line-height: 1.5; */
+        color: #fff !important;
+        /* background-color: #f8f9fa; */
+        border: 1px solid #ced4da;
+        border-radius: 0.35rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        margin-bottom: 0.5rem;
+        /* Add margin between form groups */
+        background-color: #21252a !important;
+    }
+
+
+
+    .form-label {
+        font-weight: 600;
+    }
+
+    .editable-field {
+        cursor: pointer;
+    }
+
+    .editable-field .value {
+        display: block;
+    }
+
+    .editable-field input[type="text"] {
+        display: none;
+    }
+
+    ::placeholder {
+        color: #9a9383 !important; /* Lighter placeholder text */
+    }
+</style>
+<div class="container-xl px-4 mt-5">
+    {% load static %}
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0 bg-dark text-white">
+                <div class="card-header">Profile Picture</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <div id="profile-picture-container">
+                        <img class="img-account-profile ratio-2x2 rounded-circle mb-2 "
+                            style="height: 200px; width: 200px;" id="profile-picture"
+                            src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                    </div>
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                    <!-- Profile picture upload button-->
+                    <input type="file" id="upload-input" class="d-none" accept="image/*">
+                    <label for="upload-input" class="btn btn-primary" type="button">Upload new image</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4 bg-dark text-white">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+
+                    <!-- Form Group (username)-->
+
+                    <!-- Form Row-->
+                    <div id="password-change" class="d-none">
+                        
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            
+                                <label class="form-label">Old Password</label>
+                                <div>
+                                    <input type="password" id="old-password" placeholder="Enter old password" required>
+                                </div>
+                            
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6 mt-2">
+
+                                <label class="form-label">New Password</label>
+                                <div >
+                                    <input type="password" id="new-password" placeholder="Enter new password" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-2">
+                                <label class="form-label">Confirm Password</label>
+
+                                <div class="editable-field" data-field="confirmPassword">
+                                    <input type="password" id="confirm-password" placeholder="Confirm new password" required>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div id="profile-details">
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-6">
+                                <label class="form-label">First name</label>
+                                <div class="editable-field" data-field="inputFirstName">
+                                    <span class="value">{{ user_info.firstname }}</span>
+                                    <input class="form-control form-control-sm" id="inputFirstName" type="text"
+                                        value="{{ user_info.firstname }}">
+                                </div>
+                            </div>
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6">
+                                <label class="form-label">Last name</label>
+                                <div class="editable-field" data-field="inputLastName">
+                                    <span class="value">{{ user_info.lastname }}</span>
+                                    <input class="form-control" type="text" id="inputLastName"
+                                        value="{{ user_info.lastname }}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Row        -->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (organization name)-->
+                            <div class="col-md-6">
+                                <label class="form-label">Organization name</label>
+                                <div class="editable-field" data-field="inputOrgName">
+                                    <span class="value">{{ user_info.organization_name }}</span>
+                                    <input class="form-control" type="text" id="inputOrgName"
+                                        value="{{ user_info.organization_name }}">
+                                </div>
+                            </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-6">
+                                <label class="form-label">Location</label>
+                                <div class="editable-field" data-field="inputLocation">
+                                    <span class="value">{{ user_info.location }}</span>
+                                    <input class="form-control" type="text" id="inputLocation"
+                                        value="{{ user_info.location }}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Group (email address)-->
+                        <div class="mb-3">
+                            <label class="form-label">Email address</label>
+                            <div class="editable-field" data-field="inputEmailAddress">
+                                <span class="value">{{ user_info.email }}</span>
+                                <input class="form-control" type="email" id="inputEmailAddress"
+                                    value="{{ user_info.email }}">
+                            </div>
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <!-- Form Group (phone number)-->
+                            <div class="col-md-6">
+                                <label class="form-label">Phone number</label>
+                                <div class="editable-field" data-field="inputPhone">
+                                    <span class="value">{{ user_info.phone }}</span>
+                                    <input class="form-control" id="inputPhone" type="tel"
+                                        value="{{ user_info.phone }}">
+                                </div>
+                            </div>
+                            <!-- Form Group (birthday)-->
+                            <div class="col-md-6">
+                                <label class="form-label">Birthday</label>
+                                <div class="editable-field" data-field="inputBirthday">
+                                    <span class="value">{{ user_info.birthdate }}</span>
+                                    <input class="form-control" type="date" name="birthday" id="inputBirthday"
+                                           value="{{ user_info.birthdate | date:'Y-m-d' }}">
+                                </div>
+                            </div>
+                            
+
+
+                        </div>
+                    </div>
+                    <!-- Save changes button-->
+                    <button class="btn btn-yellow btn-sm float-end" id="update-profile" type="button">Save
+                        changes</button>
+                    <button class="btn btn-yellow btn-sm float-end me-2" id="change-password" type="button">Change Password</button>
+
+                        <button class="btn btn-yellow btn-sm float-end me-2 d-none" id="change-password-btn" type="button">Save</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('change-password-btn').addEventListener('click', function() {
+
+        //alert("chsnging password");
+        var oldPassword = document.getElementById('old-password').value;
+        var newPassword = document.getElementById('new-password').value;
+        var confirmPassword = document.getElementById('confirm-password').value;
+        // Basic validation
+        if (newPassword !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'New and Confirm Password do not match!',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        if(newPassword=='' || oldPassword=='' || confirmPassword=='')
+        { // for empty fields
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please  fill all fields',
+                confirmButtonText: 'OK'
+            });
+
+            return;
+        }
+    
+        // AJAX request to Django
+        fetch('/changepassword/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Include Django CSRF token
+                // Add your CSRF token here
+            },
+            body: JSON.stringify({ oldPassword, newPassword,confirmPassword})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Display success alert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                // Display error alert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: data.message,
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    });
+    
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editableFields = document.querySelectorAll('.editable-field');
+        console.log(editableFields); // Check if elements are being selected
+    
+        editableFields.forEach(field => {
+            const inputField = field.querySelector('input');
+            const spanField = field.querySelector('.value');
+    
+            if (spanField && inputField) {
+                spanField.addEventListener('click', () => {
+                    inputField.style.display = 'block';
+                    spanField.style.display = 'none';
+                });
+    
+                inputField.addEventListener('blur', () => {
+                    inputField.style.display = 'none';
+                    spanField.style.display = 'block';
+                    spanField.innerText = inputField.value;
+                });
+            } else {
+                console.log('Element not found:', field);
+            }
+        });
+    });
+    
+</script>
+
+<script>
+    document.getElementById('update-profile').addEventListener('click', function () {
+        // Gather data from input fields
+        var firstName = document.getElementById('inputFirstName').value;
+        var lastName = document.getElementById('inputLastName').value;
+        var organizationName = document.getElementById('inputOrgName').value;
+        var location = document.getElementById('inputLocation').value;
+        var emailAddress = document.getElementById('inputEmailAddress').value;
+        var phoneNumber = document.getElementById('inputPhone').value;
+        var birthday = document.getElementById('inputBirthday').value;
+
+        // Create an object to hold the data
+        var userData = {
+            'firstname': firstName,
+            'lastname': lastName,
+            'organization_name': organizationName,
+            'location': location,
+            'email': emailAddress,
+            'phone': phoneNumber,
+            'birthdate': birthday,
+            // Add other fields...
+        };
+
+        // Send the data to the Django web route using fetch
+        fetch('/update-profile/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Include Django CSRF token
+            },
+            body: JSON.stringify(userData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle response from the server
+                if (data.status === 'success') {
+                    // Display success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    // Display error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                // Display generic error alert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while updating the profile.',
+                    confirmButtonText: 'OK'
+                });
+                console.error('Error updating profile', error);
+            });
+    });
+
+</script>
+
+<script>
+    document.getElementById('upload-input').addEventListener('change', function (e) {
+        const fileInput = e.target;
+        const profilePicture = document.getElementById('profile-picture');
+        const profilePictureContainer = document.getElementById('profile-picture-container');
+
+        const file = fileInput.files[0];
+
+        if (file) {
+            // Validate file type (optional)
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload a valid image file.');
+                fileInput.value = ''; // Clear the file input
+                return;
+            }
+
+            // Validate file size (optional)
+            const maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+            if (file.size > maxSizeInBytes) {
+                alert('File size exceeds the limit. Please upload an image smaller than 5 MB.');
+                fileInput.value = ''; // Clear the file input
+                return;
+            }
+
+            // Display the selected image
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                profilePicture.src = event.target.result;
+                profilePictureContainer.classList.add('has-image');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Optional: Add a click event to remove the uploaded image
+    document.getElementById('profile-picture-container').addEventListener('click', function () {
+        const fileInput = document.getElementById('upload-input');
+        fileInput.value = ''; // Clear the file input
+        const profilePicture = document.getElementById('profile-picture');
+        profilePicture.src = 'http://bootdey.com/img/Content/avatar/avatar1.png'; // Set default image
+        const profilePictureContainer = document.getElementById('profile-picture-container');
+        profilePictureContainer.classList.remove('has-image');
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Initial setup
+        $('#change-password').click(function () {
+            // Toggle the visibility of the divs
+            $('#password-change').toggleClass('d-none');
+            $('#profile-details').toggleClass('d-none');
+            $('#update-profile').toggleClass('d-none');
+
+            var changePasswordBtn = document.getElementById('change-password-btn');
+            changePasswordBtn.classList.toggle('d-none');
+            
+            //if ($(this).text() === 'Edit Profile') {
+                //location.reload(); // This line refreshes the page
+            //}
+            // Toggle the button text
+            var buttonText = ($(this).text() === 'Change Password') ? 'Edit Profile' : 'Change Password';
+            $(this).text(buttonText);
+        });
+        
+    });
+</script>
+
+{% endblock %}

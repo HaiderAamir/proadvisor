@@ -1,0 +1,720 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .custom-swiper-button-next,
+  .custom-swiper-button-prev {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    width: 50px; /* You can adjust this if you want larger button areas */
+    height: 50px; /* You can adjust this if you want larger button areas */
+    cursor: pointer;
+    z-index: 10;
+    transform: translateY(-50%);
+  }
+  
+  .custom-swiper-button-next::after,
+  .custom-swiper-button-prev::after {
+    content: '';
+    display: block;
+    border: solid #f1b135;
+    border-width: 0 4px 4px 0; /* Thicker border for larger arrow */
+    padding: 6px; /* Larger padding for proportionality */
+  }
+  
+  .custom-swiper-button-next {
+    right: 10px;
+  }
+  
+  .custom-swiper-button-next::after {
+    transform: rotate(-45deg);
+  }
+  
+  .custom-swiper-button-prev {
+    left: 5px;
+  }
+  
+  .custom-swiper-button-prev::after {
+    transform: rotate(135deg);
+  }
+
+  {% comment %} .filter-card:nth-child(1){
+    border: 1px solid #f1b135 !important;
+  }
+  .filter-card:nth-child(2){
+    border: 1px solid #f1b135 !important;
+  }
+  .filter-card:nth-child(4){
+    border: 1px solid #f1b135 !important;
+  } {% endcomment %}
+
+  .sticky-button {
+    margin-top: 170px;
+    position: fixed;
+    top: 20px; /* Adjust the top distance as needed */
+    right: 20px; /* Adjust the right distance as needed */
+    z-index: 1000; /* Adjust the z-index as needed */
+    background-color: #f1b135;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+
+}
+
+/* Optional styles for a sticky effect */
+.sticky-button:hover {
+    background-color: #f1b135;
+}
+
+.sticky-button:active {
+    background-color: #f1b135;
+}
+
+
+.selected-card {
+  border: 1px solid #f1b135 !important; /* Highlight color */
+  position: relative; /* Make it a relative position */
+}
+
+.selected-card .tick-icon {
+  position: absolute;
+  top: 1rem;
+  right: 15px; /* Adjust the right position as needed */
+  
+  color: #aade8d; /* Tick icon color */
+}
+
+</style>
+<style>
+  .star-icon {
+    z-index: 10; /* Ensures the star is above the card */
+    font-size: 15px; /* Adjust the size of the star icon */
+  }
+
+  .loader {
+    border: 5px solid rgba(255, 255, 255, 0.3); /* Light grey with transparency */
+    border-top: 5px solid #ffc107; /* Yellow color */
+    border-radius: 50%;
+    width: 30px; /* Size of the loader */
+    height: 30px; /* Size of the loader */
+    animation: spin 2s linear infinite;
+
+    /* Center the loader */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+
+</style>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+  
+
+
+
+<div class="mt-2" style="overflow-x: hidden">
+  <div id="submission-div">
+    <button class="sticky-button btn btn-yellow text-dark" id="one-card">Start Chat</button>
+
+    <form method="POST" action="/create-profession-advisor-panel" class="mt-4 pt-6">
+      {% csrf_token %}
+      <input name="advisors_ids" type="text" id="advisor_ids" class="d-none">
+      <button class="sticky-button btn btn-yellow text-dark" type="submit" id="many-card">Create Panel</button>
+  </form>
+  
+  <div class="container-fluid ms-3 mt-5 catswiper mySwiper" style="position: relative !important;">
+    <div class="swiper-wrapper">
+      {% for i in categories %}
+        <a id="swiper-{{i.id}}" href="/get-info?id={{i.id}}" class="swiper-slide category-swiper btn bg-dark text-white text-center me-2 get-category p-md-3" style="letter-spacing:1px;border-radius: 10px; padding:0.9%; font-size:14px;font-family:Noto Sans;"><span class="category-title float-start shadow-lg me-2" data-color="{{ i.color }}" style="border-radius:100%; width:8px; height:8px;"></span><strong class="title-category">{{i.category}}</strong></a>
+      {% endfor %}
+    </div>
+    <div class="custom-swiper-button-next text-white"></div>
+    <div class="custom-swiper-button-prev"></div>
+  </div>
+
+
+
+
+
+<div class="card-main-container px-4" id="list-view">
+
+  <div class="mt-2 mx-auto row">
+    {% for card_data in data %}
+      <div id="card_div_{{ card_data.id }}" class="me-sm-1 bg-dark mt-1 position-relative" style="border-radius: 10px; width: 200px; height: 262px;">
+  
+        <!-- Card Content -->
+        <div class="test-card-link h-80 border-0 get-card bg-dark" onclick="addRequestList('{{ card_data.id }}')" style="border-radius: 10px; width: 100%; height: 100%; border:2px; background-color: darkgrey;">
+          <div class="card h-100 text-white pt-3 border-0 bg-dark">
+            <div class="ratio ratio-1x1 w-50 mx-auto rounded bg-dark" style="width: 90px; height: 90px;">
+              <img src="./media/{{ card_data.accountant_image }}" class="card-img-top" alt="" style="border-radius: 10px;">
+            </div>
+            <div class="card-body text-center">
+              <h6 class="card-title header_text text-white"><strong>{{ card_data.header_text }}</strong></h6>
+              <p class="card-text lead mt-1 tagline_text text-white">{{ card_data.tagline_text }}</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Star Icon -->
+        {% if user in card_data.favorited_by.all %}
+        <i class="fa-solid fa-star star-icon text-yellow" data-card-id="{{ card_data.id }}" style="cursor: pointer; position: absolute; bottom: 10px; right: 10px;"></i>
+    {% else %}
+    <i class="fa-regular fa-star star-icon text-white" data-card-id="{{ card_data.id }}" style="cursor: pointer; position: absolute; bottom: 10px; right: 10px;"></i>
+    {% endif %}
+        {% comment %} <i class="fa-regular fa-star star-icon text-white" data-card-id="{{ card_data.id }}" style="cursor: pointer; position: absolute; bottom: 10px; right: 10px;"></i> {% endcomment %}
+        <span class="category-title float-end shadow-lg" data-color="{{ card_data.category_id.color }}" style="border-radius:100%;display: block; width:8px; height:8px; position: absolute; bottom: 10px; right: 35px; background-color:'{{i.category_id.color}}';"></span>
+
+      </div>
+    {% endfor %}
+  </div>
+  
+  
+</div>
+<!-- container-->
+
+  <hr class="mx-auto" style="color:#c5c0b7;border-top:2px solid #c5c0b7;width:95%;">
+
+</div>
+  <!-- Swiper JS -->
+
+{% comment %} styling script here {% endcomment %}
+
+
+
+
+
+{% comment %} model start {% endcomment %}
+<div class="modal fade" id="panelNameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Enter Panel Name</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="panelNameForm">
+      <div class="modal-body">
+        {% comment %} <label for="panelNameInput" class="form-label text-light">Panel Chat Name</label> {% endcomment %}
+        <input type="text" class="form-control bg-dark text-light" id="panelNameInput" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-yellow">Submit</button>
+
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+{% comment %} model end {% endcomment %}
+</div>
+
+
+{% comment %} model to ask panel name end {% endcomment %}
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% comment %} selected card code start {% endcomment %}
+<script>
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('form');
+    var createPanelButton = document.getElementById('many-card');
+    var startChatButton = document.getElementById('one-card');
+
+    // Handle form submission
+    form.addEventListener('submit', function(event) {
+        createPanelButton.disabled = true;
+        addLoader(createPanelButton);
+        // The form will continue to submit naturally
+    });
+    
+    startChatButton.addEventListener('click', function() {
+      this.disabled = true;
+      addLoader(this);
+      // Your AJAX code here
+  });
+
+    // Add a loader to the button
+    function addLoader(button) {
+        var loader = document.createElement('div');
+        loader.className = 'loader';
+        button.appendChild(loader);
+    }
+
+    // Reset button state when the page is reloaded or navigated back to
+    window.addEventListener('pageshow', function() {
+        resetButton(createPanelButton);
+        resetButton(startChatButton);
+    });
+
+    // Reset a button by enabling it and removing its loader
+    function resetButton(button) {
+        button.disabled = false;
+        var loader = button.getElementsByClassName('loader')[0];
+        if (loader) {
+            button.removeChild(loader);
+        }
+    }
+});
+
+
+
+
+  // Keep track of selected card IDs
+  const selectedCards = new Set();
+
+  // Maximum allowed cards
+  const maxAllowedCards = 5;
+
+  // Function to show SweetAlert toast for adding a card
+  function showCardAddAlert(remainingCards) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Card Added',
+      text: `You can add ${remainingCards} more cards.`,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000 // 3 seconds
+    });
+  }
+
+  // Function to show SweetAlert toast for removing a card
+  function showCardRemoveAlert(remainingCards) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Card Removed',
+      text: `You can remove ${remainingCards} more cards.`,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000 // 3 seconds
+    });
+  }
+
+  // Function to update the buttons based on the number of selected cards
+  function updateButtons() {
+    const submissionDiv = document.getElementById('submission-div');
+    const oneCardButton = document.getElementById('one-card');
+    const manyCardButton = document.getElementById('many-card');
+  
+    if (selectedCards.size === 1) {
+      // Show the "One Card" button and hide the "Many Cards" button
+      oneCardButton.style.display = 'block';
+      manyCardButton.style.display = 'none';
+    } else if (selectedCards.size > 1) {
+      // Show the "Many Cards" button and hide the "One Card" button
+      oneCardButton.style.display = 'none';
+      manyCardButton.style.display = 'block';
+    } else {
+      // No selected cards, hide both buttons
+      oneCardButton.style.display = 'none';
+      manyCardButton.style.display = 'none';
+    }
+    const advisorInput = document.getElementById('advisor_ids');
+    advisorInput.value = Array.from(selectedCards).join(','); // Join IDs with comma
+
+  }
+
+  updateButtons()
+
+  // Function to add or remove cards from the list and update highlighting
+  function addRequestList(cardId) {
+    const cardDiv = document.getElementById(`card_div_${cardId}`);
+
+    if (selectedCards.has(cardId)) {
+      // Card is already selected, remove it
+      selectedCards.delete(cardId);
+      cardDiv.classList.remove('selected-card');
+      removeTickIcon(cardDiv);
+      const remainingCards = maxAllowedCards - selectedCards.size;
+      showCardRemoveAlert(remainingCards);
+    } else {
+      // Check if the maximum limit is reached
+      if (selectedCards.size >= maxAllowedCards) {
+        // Maximum limit reached, show SweetAlert toast
+        Swal.fire({
+          icon: 'warning',
+          title: 'Maximum Limit Reached',
+          text: 'You can only select up to 5 cards.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000 // 3 seconds
+        });
+        return; // Exit the function to prevent adding more cards
+      }
+
+      // Card is not selected, add it
+      selectedCards.add(cardId);
+      cardDiv.classList.add('selected-card');
+      addTickIcon(cardDiv);
+      const remainingCards = maxAllowedCards - selectedCards.size;
+      showCardAddAlert(remainingCards);
+    }
+
+    // Update the buttons based on the number of selected cards
+    updateButtons();
+
+    // Highlight the board of the last selected card, if any
+    const lastSelectedCard = [...selectedCards].pop();
+    highlightBoard(lastSelectedCard);
+}
+
+// Function to add the tick icon to the right side of the cardDiv
+function addTickIcon(cardDiv) {
+    // Check if the tick icon already exists, and if not, add it
+    if (!cardDiv.querySelector('.tick-icon')) {
+        const tickIcon = document.createElement('i');
+        tickIcon.classList.add('tick-icon', 'fas', 'fa-check');
+        cardDiv.appendChild(tickIcon);
+    }
+}
+
+// Function to remove the tick icon from the cardDiv
+function removeTickIcon(cardDiv) {
+    const tickIcon = cardDiv.querySelector('.tick-icon');
+    if (tickIcon) {
+        cardDiv.removeChild(tickIcon);
+    }
+}
+
+  // Function to highlight the board based on the selected card
+  function highlightBoard(cardId) {
+    // Remove highlighting from all boards
+    const allCards = document.querySelectorAll('.filter-card');
+    allCards.forEach(card => card.classList.remove('highlighted-board'));
+
+    // Highlight the board of the selected card
+    const selectedCard = document.getElementById(`card_div_${cardId}`);
+    if (selectedCard) {
+      selectedCard.classList.add('highlighted-board');
+    }
+  }
+</script>
+
+
+
+
+{% comment %} selected card code end {% endcomment %}
+
+{% comment %} <script>
+  function redirectChat(cardId) {
+  // Construct the URL with the card's ID
+  const chatUrl = `/chat/${cardId}`;
+
+  // Redirect to the chat URL
+  window.location.href = chatUrl;
+}
+</script> {% endcomment %}
+<script>
+$(function() {
+$('.category-title').each(function() {
+  console.log($(this).data('color'))
+  $(this).css('background-color', $(this).data('color'));
+});
+});
+</script>
+
+<!-- Initialize Swiper -->
+<script>
+  var swiper = new Swiper('.mySwiper', {
+    slidesPerView: 'auto',
+    centeredSlides: false,
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'fraction', 
+    },
+    navigation: {
+      nextEl: '.custom-swiper-button-next',
+      prevEl: '.custom-swiper-button-prev',  
+    },
+  });
+  
+  
+
+  var appendNumber = 4;
+  var prependNumber = 1;
+  
+</script> <!-- swiper -->
+
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+<script>
+  
+  let color_code = document.getElementsByClassName("colorcode");
+  console.log(color_code);
+</script>
+
+<script>
+ $(document).on('click', '.get-category', function() {
+  var category_btn_id = $(this).data('id');
+  console.log("category function working",category_btn_id);
+var card_width = $('.get-card').width();
+var cards_per_row = Math.floor($('.get-card-col').width() / card_width);
+
+$('.get-card').each(function(index) {
+ 
+});
+$('.card-main-container').show();
+$.get("/get-selected-category", {category_btn_id:category_btn_id }).done(function(data) {
+  document.getElementById("card_row").innerHTML = "";
+  var search_accountant_info = JSON.parse(data);
+  console.log("search accountant info",data)
+  for (var i = 0; i < search_accountant_info.length; i++) {
+    var card = '<div style="overflow: auto" class="swiper-slide col-sm-1 mt-1 p-0 me-1 get-card-col bg-primary" style="border-radius: 10px;width: 205px; height: 266px;"><button id="card_link" class="test-card-link h-100 border-0 get-card" data-id="' + search_accountant_info[i].id + '" class="btn text-white"  style="width: 100%;background-color: #333;border-radius: 10px;"><div class="card h-100 text-white pt-3 border-0" style="background-color: #333;border-radius: 10px;"><div class="ratio ratio-1x1 w-50 mx-auto rounded" style="width: 90px !important; height: 90px !important;"><img src="./media/' + search_accountant_info[i].accountant_image + '" class="card-img-top" alt="" style="border-radius: 10px;"></div>     <div class="card-body"><h6 class="card-title header_text" id="header_text" data-id="' + search_accountant_info[i].id + '"><strong>' + search_accountant_info[i].header_text + '</strong></h6>          <h6 class="card-title" id="color_code" data-id="' + search_accountant_info[i].id + '" class="colorcode"></h6><h6 class="card-title" id="context" data-id="' + search_accountant_info[i].id + '" style="display: none;">' + search_accountant_info[i].context + '</h6><h6 class="card-title" id="category_id" data-id="' + search_accountant_info[i].category_id + '" style="display: none;"></h6><p class="card-text context tagline_text">' + search_accountant_info[i].tagline_text + '</p>            <span class="category-title float-end shadow-lg" data-color="' + search_accountant_info[i].category_id.color + '" style="display: block; width:8px; height:8px;border-radius:100%; position: absolute; bottom: 10px; right: 10px; background-color:' + search_accountant_info[i].category_color + ';"></span>      </div>    </div>  </button>  </div>';
+
+    document.getElementById("card_row").innerHTML += card;
+  }
+
+});
+});
+
+$(".category").click(function() {
+var categoryWidth = $(this).width();
+var rowWidth = $(this).parent().width();
+var remainingSpace = rowWidth;
+$(this).prevAll(".card").each(function() {
+  remainingSpace -= $(this).outerWidth(true);
+});
+if (remainingSpace >= categoryWidth) {
+  var newLeft = rowWidth - remainingSpace;
+  $(this).css({"left": newLeft, "top": "-100px"}).appendTo($(this).parent().prev());
+}
+});
+
+
+
+  $(document).on('click', '.get-card', function() {
+    
+    
+    var cardId = $(this).data('id');
+    var cardData = $(this).find('#context').text();
+    console.log('Clicked card ID: ' + cardId);
+    console.log('Card data: ' + cardData);
+
+
+    var xhr = new XMLHttpRequest();
+
+    console.log("data-id of clicked button: " + cardId);
+    
+  });
+
+  
+//script to redirect trying saying card
+function startchat(id)
+{   
+  window.location.href = '/chat/' + id;
+}
+
+
+function getBotResponse(){
+
+
+$.get("/get", {msg:rawText }).done(function(data) {
+  
+  console.log("working");
+
+
+});
+}
+
+</script>
+
+{% comment %} styling script here {% endcomment %}
+<script>
+$(document).ready(function(){
+  $("#view-more").click(function(){
+    $("#list-view").css('display', 'block');
+    $("#swiper-view").css('display', 'none');
+  })
+
+  $("#view-swiper").click(function(){
+    $("#list-view").css('display', 'none');
+    $("#swiper-view").css('display', 'block');
+  })
+})
+</script>
+
+
+<script>
+// Initialize Swiper
+var swiper = new Swiper('#card_row', {
+  // Add necessary configuration options here
+  slidesPerView: 'auto',
+  spaceBetween: 16,
+});
+</script>
+
+<script>
+$(document).ready(function() {
+  var slider = $('.categories-slider');
+
+  slider.slick({
+    slidesToShow: 'auto',
+    prevArrow: $('.slider-prev'),
+    nextArrow: $('.slider-next')
+  });
+});
+
+
+// Add active class to the current button (highlight it)
+var header = document.getElementById("myDIV");
+var btns = header.getElementsByClassName("category-swiper");
+for (var i = 0; i < btns.length; i++) {
+btns[i].addEventListener("click", function() {
+var current = document.getElementsByClassName("active");
+current[0].className = current[0].className.replace(" active", "");
+this.className += " active";
+});
+} 
+</script>
+<script>
+$(document).ready(function() {
+    $("#searchInput").on("input", function() {
+        const query = $(this).val().toLowerCase();
+        $(".filter-card").each(function() {
+            const header = $(this).data("header").toLowerCase();
+            if (header.includes(query)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+</script>
+
+
+
+{% comment %} code from 20-09-2023 {% endcomment %}
+<script>
+  $(document).ready(function() {
+    var url = window.location.href;
+    var id = url.substring(url.lastIndexOf('=') + 1);
+    $('#swiper-' + id).addClass('active');
+  });
+</script>
+
+{% comment %} function to start single advisor chat start {% endcomment %}
+<script>
+  $(document).ready(function () {
+    $('#one-card').click(function () {
+      // Get the first card ID from the selectedCards set
+      const cardId = [...selectedCards][0];
+
+      if (cardId) {
+        // Construct the URL with the card's ID
+        const chatUrl = `/chat/${cardId}`;
+
+        // Redirect to the chat URL
+        window.location.href = chatUrl;
+      } else {
+        // No selected cards, handle accordingly (show an alert, redirect to another page, etc.)
+        console.error('No card selected.');
+      }
+    });
+  });
+</script>
+{% comment %} function to start single advisor chat end {% endcomment %}
+
+{% comment %} star code {% endcomment %}
+<script>
+  $(document).ready(function() {
+    $('.star-icon').click(function() {
+      var $this = $(this);
+      var cardId = $this.data('card-id');
+      var isStarred = $this.hasClass('text-yellow');
+
+      if(isStarred)
+      {
+        $this.removeClass("text-yellow")
+        $this.removeClass("fa-solid")
+        $this.addClass("text-white")
+        $this.addClass("fa-regular")
+      }
+      else{
+        $this.removeClass("text-white")
+        $this.addClass("text-yellow")
+        $this.removeClass("fa-regular")
+        $this.addClass("fa-solid")
+      }
+
+      
+
+      // Determine the new star status
+      var starStatus = $this.hasClass('text-yellow') ? true : false;
+
+      // AJAX request to update the star status
+      $.ajax({
+        url: '/favorite/',
+        type: 'POST',
+        data: {
+          'star_status': starStatus,
+          'card_id': cardId
+        },
+        headers: {'X-CSRFToken': getCookie('csrftoken')}, // CSRF token
+
+        success: function(response) {
+          // SweetAlert toast message
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: starStatus ? 'Added to favorites' : 'Removed from favorites',
+            showConfirmButton: false,
+            timer: 3000,
+            toast: true
+          });
+        },
+        error: function(error) {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: starStatus ? 'Not Added to favorites' : 'Not Removed from favorites',
+            showConfirmButton: false,
+            timer: 3000,
+            toast: true
+          });
+        }
+      });
+    });
+  });
+
+  // Function to get CSRF token
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+{% endblock %}

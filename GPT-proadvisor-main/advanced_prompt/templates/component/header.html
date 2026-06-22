@@ -1,0 +1,101 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-dark shadow fixed-top" id="nav">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" href="{% url 'home' %}"
+      style="font-size:24px;font-weight:900 !important;font-family: Noto Sans;font-stretch: expanded;letter-spacing:1px;">
+      {% load static %}
+      <img src="/media/media/logo/logo.png" class="ms-3" alt="ProAdvisor.AI" style="height: 50px; width: 50px;">
+      <strong>ProAdvisor.AI</strong></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+      aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- new code start -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo02">
+
+      <div class="d-flex align-items-center" id="header-row">
+        <!-- my search code start -->
+
+        <!-- my search code end -->
+        <div class="d-flex align-items-center ps-1 bgSecondary" id="search-form"
+          style="border-radius: 10px;width: 410px !important;">
+          <input id="searchInput" class="form-control text-white" type="text" name=""
+            placeholder="Type advisor name e.g., Tax Accountant"
+            style="background-color: transparent !important;">
+          <button id="search-button" class="btn" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fas fa-search text-white"></i>
+          </button>
+        </div>
+        <a class="btn" href="/documentation" rel="noreferrer" target="_blank">
+          <i class="fa-solid fa-book-open text-yellow fa-2x"></i>
+        </a><a class="btn" role="button" href="/aboutus">
+          <i class="fa-solid fa-circle-question text-yellow fa-2x"></i>
+        </a>
+
+        <!-- new login code start -->
+       
+        <li class="nav-item dropdown text-white ms-1" style="list-style-type: none;">
+          <a class="p-0 text-center btn rounded-circle border-0" href="#" id="navbarDropdown"
+            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-user-gear text-yellow fa-2x"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <a style="text-decoration: none;" href="/profile"><li class="dropdown-item text-white"><i class="fa-solid fa-user me-2 text-white"></i>{{ request.session.user_name }}</li></a>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li class="form-check form-switch form-check-reverse float-start">
+              <label class="form-check-label" for="darkModeSwitch">
+                <i class="fa-solid fa-sun me-2" id="dayIcon" style="margin-left: 15px;"></i>
+                <i class="fa-solid fa-moon me-2" id="nightIcon" style="display: none; margin-left: 15px;"></i>
+              </label>
+              <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+            </li>
+            <li class="dropdown-item text-white">
+              <i class="fa-solid fa-sign-out me-2 text-white"></i>
+              <a class="text-white" href="{% url 'logout' %} " style="text-decoration:none"> Logout </a>
+            </li>
+          </ul>
+        </li>
+        
+        
+      </div> 
+
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+        aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+</nav>
+
+<script>
+  $(document).ready(function() {
+    // Function to filter and show cards based on the input
+    function filterCards() {
+      var searchTerm = $('#searchInput').val().toLowerCase();
+
+      // Loop through each card
+      $('.test-card-link').each(function() {
+        var headerText = $(this).find('.header_text').text().toLowerCase();
+
+        // Check if the header text contains the search term
+        if (headerText.includes(searchTerm)) {
+          $(this).parent().show(); // Show the card
+        } else {
+          $(this).parent().hide(); // Hide the card if not matched
+        }
+      });
+    }
+
+    // Trigger filterCards function on keyup event in the search input
+    $('#searchInput').on('keyup', function() {
+      filterCards();
+    });
+
+    // Trigger filterCards function when the search button is clicked
+    $('#search-button').on('click', function() {
+      filterCards();
+    });
+  });
+</script>
+

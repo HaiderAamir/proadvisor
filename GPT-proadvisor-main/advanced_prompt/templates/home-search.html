@@ -1,0 +1,512 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid row mt-5">
+  <div class="modal fade" id="chat-panel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Add Panel</h1>
+          <button type="button" class="btn-close text-yellow" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input class="form-control bg-dark text-white mb-3" id="panel-name" placeholder="Panel Name" value='' />
+          <input class="form-control bg-dark text-white mb-3" id="panel-topic" placeholder="Panel Topic" value='' />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-sm btn-success" onclick="startchat()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="text-center m-auto mt-5 mb-5" id="header-section">
+    <h3 class="text-white" style="font-weight: bolder;">
+      <img src="./media/media/logo/logo.png" class="ms-3" alt="ProAdvisor.AI" style="height: 80px; width: 80px;">
+      Expertise from Every Angle
+    </h3>
+  </div>
+
+
+  <div class="text-center m-auto">
+    <div class="container pb-2 pt-5 w-50 bg-dark text-white" style="border: 1px solid #d8d6d1; width: 50% !important">
+      <div class="container-fluid text-white">
+        <input type="text" id="userInput" class="form-control bg-dark text-white" placeholder="Ask anything ..."
+          style="width: 100%; border: 0px; font-size: 25px;">
+      </div>
+      <div class="row m-auto">
+        <div class="col-6 d-flex mt-4 align-items-center" id="Expertise-Focus">
+          <i class="fas fa-search me-2"></i>
+          <span class="text-white">Expertise Focus</span>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+          <button type="submit" class="btn rounded-circle mt-3 bg-warning" id="submit-btn"
+            style="height:50px; width: 50px; margin-right: -10px;" onclick="quickSearch()">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- Section -->
+  <div class="text-center m-auto" id="Expertise-Box">
+    <div class="container py-3 bg-dark text-white" style="border: 1px solid #d8d6d1;width: 60%;">
+      <div class="row bg-dark text-white">
+        {% for experty in experties %}
+        <div class="col-md-4 bg-dark text-white">
+          <div class="card bg-dark text-white" id="{{ experty.category_id.id }}"
+            onclick="addCategoryIdToList({{ experty.category_id.id }})">
+            <div class="row g-0">
+              <div class="col-md-4 d-flex align-items-center justify-content-center bg-dark text-white">
+                <img src="{{ experty.image.url }}" class="rounded-circle" alt="Category Image"
+                  style="height: 60px; width: 60px;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body bg-dark">
+                  <h6 class="card-title fw-bold text-start text-yellow bg-dark">{{ experty.name }}</h6>
+                  <p class="card-text text-start text-white small bg-dark">{{ experty.tag_line }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+  <div class="text-center m-auto">
+    <div class="container py-3 text-white" style="width: 90%;">
+      <h2 id="advisor-main-heading" class="row gap-3 justify-content-center mb-5" style="text-align: left;"></h2>
+      <div id="advisor-container" class="row gap-3 justify-content-center" style="text-align: left;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Your existing HTML code -->
+
+<!-- code to show blinker in input tag start -->
+<script>
+  $(document).ready(function () {
+    // Set focus on the #userInput input
+    $('#userInput').focus();
+
+    // Function to show/hide the blinking cursor
+    function toggleBlinker() {
+      var input = $('#userInput');
+      var cursor = input.next('.blinker');
+
+      // Toggle the visibility of the cursor
+      cursor.toggle();
+
+      // Repeat the toggle after a delay (adjust the delay as needed)
+      setTimeout(toggleBlinker, 500);
+    }
+
+    // Initial call to start the blinker
+    toggleBlinker();
+  });
+</script>
+<!-- code to show blinker in input tag end -->
+
+
+<!-- code to submit user question on press enter start -->
+<script>
+  $(document).ready(function () {
+    // Function to handle key press events
+    function handleKeyPress(event) {
+      // Check if the pressed key is Enter (key code 13)
+      if (event.keyCode === 13) {
+        // Trigger a click event on the #submit-btn button
+        $('#submit-btn').click();
+      }
+    }
+
+    // Bind the key press event to the document
+    $(document).on('keypress', handleKeyPress);
+  });
+</script>
+
+<!-- code to submit user question on press enter end -->
+
+
+<script>
+  var categoryIds = [];
+  // want to access this list in other script
+
+  function addCategoryIdToList(categoryId) {
+    if (!categoryIds.includes(categoryId)) {
+      categoryIds.push(categoryId);
+      console.log(categoryIds)
+    } else {
+      var index = categoryIds.indexOf(categoryId);
+      if (index > -1) {
+        categoryIds.splice(index, 1);
+        console.log(categoryIds)
+      }
+    }
+    var cards = document.getElementsByClassName("card");
+    for (var i = 0; i < cards.length; i++) {
+      if (categoryIds.includes(parseInt(cards[i].id))) {
+        cards[i].classList.add("active");
+      } else {
+        cards[i].classList.remove("active");
+      }
+    }
+  }
+</script>
+
+
+<script>
+
+  function removeQuotes(text) {
+    // Use regular expressions to remove both single and double quotes
+    return text.replace(/['"]/g, '');
+  }
+
+  // Function to create advisor cards and append them to the container
+  // function createAdvisorCard(advisorData) {
+  //   //console.log("this data is coming in response");
+  //   //console.log(advisorData);
+  //   const advisorCard = document.createElement("div");
+  //   advisorCard.className = "col-md-3 py-3 mb-3 hover-border";
+  //   advisorCard.style.border = "2px solid #d8d6d1";
+  //   //advisorCard.style.maxHeight = "300px"; // Adjust the maximum height as needed
+  //   advisorCard.style.overflow = "hidden"; // Add this line to clip overflowing content
+  //   advisorCard.setAttribute("data-id", advisorData.id);
+  //   advisorCard.setAttribute("data-response", advisorData.response);
+  //   advisorCard.setAttribute("onclick", `sendData('${advisorData.id}', '${removeQuotes(advisorData.response)}', '${removeQuotes(advisorData.question)}')`);
+
+  //   const cardContent = `
+      
+  //     <div class="container mt-2 card-container p-0" >
+  //       <div class="row">
+  //         <span class="ellipsis-text text-white fs-6" style="max-width: 100%;">${advisorData.response}</span>
+  //       </div>
+        
+  //       <div class="row">
+  //         <div class="col-3">
+  //           <img src="${advisorData.image}" alt="Quote Teller" class="img-fluid rounded-circle img-xs mt-2">
+  //       </div>       
+  //           <div class="col-9 align-self-center">
+  //               <p class="card-text text-yellow"><em>${advisorData.name}</em></p>
+  //           </div>
+  //       </div>
+  //     </div>
+   
+      
+  //     `;
+
+  //   advisorCard.innerHTML = cardContent;
+  //   document.getElementById("advisor-container").appendChild(advisorCard);
+  // }
+
+ // Your function to remove quotes
+
+
+  function createAdvisorCard(advisorData, index) {
+  let mainResponseArray = Array.from(advisorData.main_response);
+
+  const advisorCard = document.createElement("div");
+  advisorCard.className = "col-md-3 py-3 mb-3 hover-border";
+  advisorCard.style.border = "2px solid #d8d6d1";
+  advisorCard.style.overflow = "hidden";
+  advisorCard.setAttribute("data-id", advisorData.id);
+  advisorCard.setAttribute("data-response", advisorData.response);
+  advisorCard.setAttribute(
+  "onclick",
+  `sendData('${advisorData.id}', '${removeQuotes(advisorData.response)}', '${removeQuotes(advisorData.question)}', ${JSON.stringify(mainResponseArray)})`
+);
+  
+  //advisorCard.setAttribute("onclick", `sendData('${advisorData.id}', '${removeQuotes(advisorData.response)}', '${removeQuotes(advisorData.question)}', '${removeQuotes(advisorData.main_response)}')`);
+
+  //advisorCard.setAttribute("onclick", `sendData('${advisorData.id}', '${removeQuotes(advisorData.response)}', '${removeQuotes(advisorData.question)}', '${advisorData.main_response}')`);
+
+  // Determine the number of filled stars based on the index
+  const numFilledStars = index < 3 ? 5 : (index < 6 ? 4 : 3);
+
+  const cardContent = `
+  <div class="rating-stars float-end">
+      ${Array(numFilledStars).fill('<i class="fas fa-star filled-star" style="color: #ffc107;"></i>').join('')}
+      ${Array(5 - numFilledStars).fill('<i class="far fa-star empty-star"></i>').join('')}
+    </div>
+    
+    <div class="container row mt-2 card-container p-0">
+      <div class="row">
+        <span class="ellipsis-text text-white fs-6" style="max-width: 100%;">${advisorData.response}</span>
+      </div>
+      
+      <div class="row">
+        <div class="col-3">
+          <img src="${advisorData.image}" alt="Quote Teller" class="img-fluid rounded-circle img-xs mt-2">
+        </div>
+        <div class="col-9 align-self-center">
+          <p class="card-text text-yellow"><em>${advisorData.name}</em></p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  advisorCard.innerHTML = cardContent;
+  document.getElementById("advisor-container").appendChild(advisorCard);
+}
+
+
+
+  // Function to send the user's question to the server and handle the response
+  function quickSearch() {
+
+    var userInput = document.getElementById("userInput").value;
+
+    if (userInput) {
+      // Show loader while response is not coming
+
+      $("#header-section").slideUp(1000);
+
+      const loaderDiv = document.createElement("div");
+      loaderDiv.className = "loader";
+      document.body.appendChild(loaderDiv);
+
+      fetch('/ask_question/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ 'userInput': userInput, 'categoriesList': categoryIds })
+      })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("advisor-container").innerHTML = '';
+          $("#advisor-main-heading").html("<div class='row'><div class='col-md-12 text-center m-auto'>Quick Answers</div><div class='col-md-9 m-auto text-end'><button class='btn bg-warning   btn-sm' style='' onclick='single_multiple_chat()'>Start Chat</button></div></div>");
+
+          advisors_list = data.advisors_ids;
+          for (i = 0; i < advisors_list.length; i++) {
+            console.log("this is: ", advisors_list[i])
+            id = advisors_list[i]
+            question = userInput
+            ask_advisor(id, question, i)
+          }
+
+          loaderDiv.remove();
+        });
+
+    }
+    else {
+      // Show bootstrap alert for entering a question
+      const alertDiv = document.createElement("div");
+      alertDiv.className = "alert alert-warning alert-dismissible fade show";
+      alertDiv.role = "alert";
+      alertDiv.innerHTML = "Please enter a question.";
+      alertDiv.style.zIndex = "9999";
+
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.className = "btn-close";
+      closeButton.setAttribute("data-bs-dismiss", "alert");
+      closeButton.setAttribute("aria-label", "Close");
+
+      alertDiv.appendChild(closeButton);
+      document.body.insertBefore(alertDiv, document.body.firstChild);
+
+      // Remove the alert after 5 seconds
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 2000);
+
+    }
+  }
+
+  function ask_advisor(id, question, index) {
+    fetch('/ask_advisor/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify({ 'id': id, 'question': question })
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Remove the loader
+        // loaderDiv.remove();
+        advisor = data.advisors[0];
+        createAdvisorCard(advisor, index);
+
+      });
+  }
+</script>
+
+
+<script>
+
+  $(document).ready(function () {
+    $("#Expertise-Box").hide();
+  });
+  $("#Expertise-Focus").click(function () {
+    $("#Expertise-Box").toggle();
+  });
+</script>
+
+
+{% comment %} panel code script starts here {% endcomment %}
+<script>
+  var chosenCardsIds = [];
+  var chosenCardData = []
+  var chosenCardQuestion = []
+  var choseCardMainData = []
+  var panelName = '';
+  var panelTopic = '';
+
+  function sendData(id, response, question, main_response) {
+    var card = document.querySelector(`[data-id="${id}"]`);
+    if (card) {
+      if (chosenCardsIds.includes(id)) {
+        var index = chosenCardsIds.indexOf(id);
+        if (index > -1) {
+          chosenCardsIds.splice(index, 1);
+        }
+        card.classList.remove("chosen"); // Remove the "chosen" class
+      } else {
+        chosenCardsIds.push(id);
+        chosenCardData.push(response);
+        chosenCardQuestion.push(question);
+        choseCardMainData.push(main_response);
+        card.classList.add("chosen"); // Add the "chosen" class
+      }
+      console.log(chosenCardsIds);
+      console.log(response);
+      console.log(main_response);
+      console.log(question);
+    } else {
+      console.log(`Card with data-id "${id}" not found.`);
+    }
+  }
+
+  function single_multiple_chat() {
+    if (chosenCardsIds.length >= 2) {
+      startchat();
+    }
+    else {
+      startchat();
+    }
+
+  }
+
+  function startchat() {
+
+    // Prevent the form from submitting when the button is clicked
+    event.preventDefault();
+
+    panelName = document.getElementById("panel-name").value;
+    panelTopic = document.getElementById("panel-topic").value;
+
+    if (chosenCardsIds.length < 1) {
+      console.error("Error: Minimum 1 advisor ID should be in the list to submit");
+      // Show sweet alert with error message
+      Swal.fire({
+        position: 'top-end',
+        icon: 'warning',
+        title: 'Select at least one advisor',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      return;
+    }
+
+    // Send the list data to the /start_ai_chat/ URL
+    const csrftoken = "{{ csrf_token }}";
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/start_ai_chat/';
+    form.style.display = 'none';
+
+    // Create hidden input fields for your data
+    const chosenCardsIdsInput = document.createElement('input');
+    chosenCardsIdsInput.type = 'hidden';
+    chosenCardsIdsInput.name = 'advisors_id';
+    chosenCardsIdsInput.value = JSON.stringify(chosenCardsIds);
+    form.appendChild(chosenCardsIdsInput);
+
+    const chosenCardDataInput = document.createElement('input');
+    chosenCardDataInput.type = 'hidden';
+    chosenCardDataInput.name = 'chosenCardData';
+    chosenCardDataInput.value = JSON.stringify(chosenCardData);
+    form.appendChild(chosenCardDataInput);
+
+    const chosenCardMainDataInput = document.createElement('textarea');
+    chosenCardMainDataInput.type = 'hidden';
+    chosenCardMainDataInput.name = 'chosenCardMainData';
+    chosenCardMainDataInput.value = JSON.stringify(choseCardMainData);
+    form.appendChild(chosenCardMainDataInput);
+
+    const chosenCardQuestionInput = document.createElement('input');
+    chosenCardQuestionInput.type = 'hidden';
+    chosenCardQuestionInput.name = 'chosenCardQuestion';
+    chosenCardQuestionInput.value = JSON.stringify(chosenCardQuestion);
+    form.appendChild(chosenCardQuestionInput);
+
+    const panelNameInput = document.createElement('input');
+    panelNameInput.type = 'hidden';
+    panelNameInput.name = 'panel_name';
+    panelNameInput.value = chosenCardQuestion[0];
+    form.appendChild(panelNameInput);
+
+    const panelTopicInput = document.createElement('input');
+    panelTopicInput.type = 'hidden';
+    panelTopicInput.name = 'panel_topic';
+    panelTopicInput.value = chosenCardQuestion[0];
+    form.appendChild(panelTopicInput);
+
+    const csrfTokenInput = document.createElement('input');
+    csrfTokenInput.type = 'hidden';
+    csrfTokenInput.name = 'csrfmiddlewaretoken';
+    csrfTokenInput.value = csrftoken;
+    form.appendChild(csrfTokenInput);
+
+    // Handle the JSON response
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      fetch(form.action, {
+        method: form.method,
+        body: new FormData(form)
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.card_id) {
+            window.location.href = `/chats/${data.card_id}`;
+          } else {
+            console.error("Error: No card ID found in the response");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    });
+
+    // Append the form to the document
+    document.body.appendChild(form);
+    // Submit the form programmatically
+    form.submit();
+
+  }
+
+
+</script>
+
+
+
+{% endblock %}

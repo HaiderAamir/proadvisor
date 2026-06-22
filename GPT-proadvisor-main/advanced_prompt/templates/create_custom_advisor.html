@@ -1,0 +1,212 @@
+<html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.css" />
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+<style>
+    .ellipsis-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .choices__item.choices__item--choice.choices__item--selectable{
+        color: black !important;
+    }
+
+    .choices__item.choices__item--choice.choices__item--disabled{
+        color: black !important;
+    }
+
+    #create-panel-form > div:nth-child(2) > div{
+        background-color: black !important;
+    }
+</style>
+</head>
+
+<body class="bg-dark">
+
+<!-- Your existing HTML code -->
+
+
+
+<div class="mx-5 mt-5">
+    <div class="mt-2 mx-auto row">
+      {% for card_data in data %}
+      <div class="me-sm-1 mt-1 filter-card bg-dark" data-header="{{ card_data.header_text }}" style="border-radius: 10px; width: 200px !important; height: 262px;">
+
+          <div class="card h-100 text-white pt-3 border-0 bg-dark">
+            <div class="ratio ratio-1x1 w-50 mx-auto rounded bg-dark" style="width: 90px !important; height: 90px !important">
+              <img src="./media/{{card_data.accountant_image}}" class="card-img-top" alt="" style="border-radius: 10px;">
+            </div>
+            <div class="card-body">
+              <h6 class="card-title header_text text-white" id="header_text" data-id="{{ card_data.id }}"><strong>{{card_data.header_text}}</strong></h6>
+              <p class="card-text lead mt-1 ellipsis-text tagline_text text-white">{{card_data.tagline_text}}</p>
+              <span class="category-title float-end shadow-lg" data-color="{{ card_data.category_id.color }}" style="border-radius:100%;display: block; width:8px; height:8px; position: absolute; bottom: 10px; right: 10px; background-color:'{{i.category_id.color}}';"></span>
+              <div class="d-flex">
+                <form class="me-2">
+                    <button type="button" class="btn btn-warning btn-sm text-white bg-dark shadow bottom-0" onclick="handleAdd({ id: '{{card_data.id}}', headerText: '{{card_data.header_text}}', taglineText: '{{card_data.tagline_text}}', description: '{{card_data.description}}', image: '{{card_data.accountant_image }}' })"><i class="fa-solid fa-pen-to-square"></i></button>
+                </form>
+
+              <form action="/delete_custom_advisor" method="post" id="deleteForm">
+                {% csrf_token %}
+                <button type="button" class="btn btn-warning btn-sm text-white bg-dark shadow" onclick="confirmDelete()"><i class="fa-solid fa-trash"></i></button>
+                <input type="hidden" name="additional_id" id="additional-id" value={{card_data.id}}>
+            </form>
+        </div>
+              
+            </div>
+            
+          </div>
+
+          <div class=" justify-content-center">
+            
+        </div>
+        <!-- Add and Delete buttons -->
+        
+        
+      </div>
+      {% endfor %}
+    
+    </div>
+  </div>
+
+  <div class="mb-4 mt-4 me-5">
+        <div id="card-and-form-container" class="card h-50 border-0 shadow bg-dark text-white" style="cursor: pointer;" onclick="toggleFormVisibility()">
+            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                <i class="fas fa-plus fa-3x mb-2"></i>
+                <h6 class="mb-0">Create Custom Advisor</h6>
+            </div>
+            <!-- Form for adding a new custom advisor -->
+            <div id="form-container" class="position-absolute top-0 start-0 w-100 h-100 p-3 bg-dark rounded" style="display: none; z-index: 1000;">
+                <form id="create-advisor-form" action="/custom_advisor_submit" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmission()">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label for="advisor-name" class="form-label text-white fw-bold">Synergy Persona</label>
+                        <input class="form-control form-control-sm text-white bg-dark border-0" type="text" name="advisor_name" id="advisor-name"
+                            placeholder="Enter Synergy Persona title" required>
+                    </div>
+                
+                    <div class="mb-4 mt-4" >
+                        <label for="choices-multiple-remove-button" class="form-label text-white fw-bold">Synergy Persona</label>
+                        <select class="form-select fw-bold border-0" id="choices-multiple-remove-button" name="advisors_id" multiple>
+                            <option value="" disabled style="background-color: black !important; color: white !important;">-- Synergy Persona --</option>
+                            {% for advisor in advisors %}
+                                <option value="{{ advisor.id }}" style="background-color: black !important; color: black !important;">{{ advisor.header_text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                
+                    <div class="mb-2">
+                        <label for="image" id="image" class="form-label text-white fw-bold">Image (Optional)</label>
+                        <input class="form-control form-control-sm text-white bg-dark border-0" type="file" name="image" id="image"
+                            accept="image/*">
+                    </div>
+                    <div class="text-center shadow mt-3">
+                        <button type="submit" id="submit-button" class="btn text-white btn-warning bg-dark btn-lg float-end shadow ms-1">Create Advisor</button>
+                        {% comment %} <button type="button" id="cancel-button" class="btn text-white btn-warning bg-dark btn-lg float-end shadow" onclick="cancelForm()">Cancel</button> {% endcomment %}
+                    </div>
+                    <input type="hidden" name="ad_id" id="ad_id">
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script>
+        $(document).ready(function () {
+
+            var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+                removeItemButton: true,
+                maxItemCount: 5,
+                searchResultLimit: 5,
+                renderChoiceLimit: 5
+            });
+
+
+        });
+    </script>
+
+<!-- Your existing JavaScript libraries and scripts -->
+<script>
+    function cancelForm() {
+        // Reload the current page
+        location.reload();
+    }
+
+    let formIsOpen = false;
+
+    function toggleFormVisibility() {
+        if (!formIsOpen) {
+            const formContainer = document.getElementById('form-container');
+            formContainer.style.display = 'block';
+            formIsOpen = true;
+        }
+    }
+
+    function handleFormSubmission() {
+        // Disable card click during form submission
+        document.getElementById('card-and-form-container').onclick = function() { return false; };
+    }
+
+
+    function handleAdd(cardData) {
+        const formContainer = document.getElementById('form-container');
+        const form = document.getElementById('create-advisor-form');
+        const submitButton = document.getElementById('submit-button');
+        submitButton.innerText = "Update Advisor";
+    
+        if (cardData) {
+            // Show the form for editing
+            formContainer.style.display = 'block';
+            formIsOpen = true;
+    
+            // Set the form action to update route
+            form.action = "/update_custom_advisor";
+    
+            // Populate form fields with existing card data
+            document.getElementById('advisor-name').value = cardData.headerText;
+            document.getElementById('ad_id').value = cardData.id;
+            document.getElementById('image').value = cardData.image;
+        }
+        
+    }
+    function confirmDelete() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If user confirms, submit the form
+                document.getElementById('deleteForm').submit();
+            }
+        });
+    }
+    
+    
+    
+</script>
+
+
+
+{% endblock %}
+
+</html>

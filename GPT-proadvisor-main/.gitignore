@@ -1,0 +1,29 @@
+__pycache__/
+*/settings.py
+db_advance_prompt
+advanced_prompt_for_accountants/settings.py
+env/Lib/site-packages/aiohttp/_http_writer.cp311-win_amd64.pyd
+
+advanced_prompt/migrations/*
+
+env/*
+media/*
+
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+/migrations/
+
+# Virtual Environment
+venv/
+env/
+
+# Ignore secret key
+secret_key.txt
+
+# Ignore development settings
+settings.py

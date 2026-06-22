@@ -1,0 +1,170 @@
+<html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.css" />
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+
+</head>
+
+<body class="bg-dark">
+
+
+
+    <div class="mx-5 mt-5">
+        <div class="container text-center">
+          {% if error_messages %}
+            {% for message in error_messages %}
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      
+        <div class="text-center mb-5">
+          <h2 class="text-white">Create Your Panel</h2>
+          <p class="text-white small">Fill out the details below to start a new panel.</p>
+        </div>
+      
+        <form id="create-panel-form">
+          <div class="mb-4">
+            <label for="panel-name" class="form-label text-white fw-bold">Panel Name</label>
+            <div class="input-group">
+              <!-- <span class="input-group-text bg-dark text-white border-0">
+                <i class="bi bi-journal-text"></i>
+              </span> -->
+              <input class="form-control text-white bg-dark border-0" type="text" name="panel_name" id="panel-name" placeholder="Enter panel name" aria-describedby="panelNameHelp">
+            </div>
+            <div id="panelNameHelp" class="form-text text-white small">Choose a unique name for your panel.</div>
+          </div>
+      
+          <div class="mb-4">
+            <label for="choices-multiple-remove-button" class="form-label text-white fw-bold">Add Advisors</label>
+            <select class="form-selecttext-white fw-bold border-0" id="choices-multiple-remove-button" name="advisors_id" multiple>
+              <option value="" disabled>-- Select Advisors --</option>
+              {% for advisor in advisors %}
+                <option value="{{ advisor.id }}">{{ advisor.header_text }}</option>
+              {% endfor %}
+            </select>
+          </div>
+      
+          <div class="mb-4">
+            <label for="panel-topic" class="form-label text-white fw-bold">Panel Topic</label>
+            <input class="form-control text-white bg-dark border-0" type="text" name="panel_topic" id="panel-topic" placeholder="Enter panel topic">
+          </div>
+      
+          <div class="text-center">
+            <button type="submit" class="btn text-white btn-primary bg-dark btn-lg float-end">Create Panel</button>
+          </div>
+        </form>
+      </div>
+      
+      <style>
+        .input-group-text {
+          background-color: #2e2e2e; /* Dark background for input group text */
+        }
+      
+        .input-group-text i {
+          color: #007bff; /* Bootstrap primary color for icons */
+        }
+      
+        .form-control, .form-select {
+          background-color: #2e2e2e; /* Dark background for inputs */
+          color: #fff; /* White text for inputs */
+        }
+      
+        .form-control:focus, .form-select:focus {
+          box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Bootstrap primary color with transparency for focus */
+        }
+      
+        .form-text {
+          color: #6c757d; /* Muted text for form help */
+        }
+      
+        .btn-primary {
+          padding: 0.75rem 1.5rem; /* Larger padding for a bigger button */
+          border-color:#f1b135;
+        }
+
+        .btn-primary:hover {
+            border-color:yellow; 
+          }
+      
+        /* Adding transition to input fields for smoother focus effect */
+        .form-control, .form-select, .input-group-text {
+          transition: box-shadow 0.2s ease-in-out;
+        }
+      </style>
+      
+      <script>
+        // JavaScript to handle the form submission
+        document.getElementById('create-panel-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+          sendData();
+        });
+      </script>
+      
+
+    <script>
+        $(document).ready(function () {
+
+            var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+                removeItemButton: true,
+                maxItemCount: 5,
+                searchResultLimit: 5,
+                renderChoiceLimit: 5
+            });
+
+
+        });
+    </script>
+
+    <script>
+        function sendData() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/prof_simple_panel_submit';
+            form.style.display = 'none';
+            const csrfTokenInput = document.createElement('input');
+            csrfTokenInput.type = 'hidden';
+            csrfTokenInput.name = 'csrfmiddlewaretoken';
+            csrfTokenInput.value = '{{ csrf_token }}';
+            form.appendChild(csrfTokenInput);
+            const panelNameInput = document.createElement('input');
+            panelNameInput.type = 'hidden';
+            panelNameInput.name = 'panel_name';
+            panelNameInput.value = document.getElementById('panel-name').value;
+            form.appendChild(panelNameInput);
+            const advisorsIdInput = document.createElement('input');
+            advisorsIdInput.type = 'hidden';
+            advisorsIdInput.name = 'advisors_id';
+            const selectedAdvisors = document.querySelectorAll('#choices-multiple-remove-button option:checked');
+            const selectedAdvisorsIds = Array.from(selectedAdvisors).map(option => option.value);
+            advisorsIdInput.value = JSON.stringify(selectedAdvisorsIds);
+            form.appendChild(advisorsIdInput);
+            const panelTopicInput = document.createElement('input');
+            panelTopicInput.type = 'hidden';
+            panelTopicInput.name = 'panel_topic';
+            panelTopicInput.value = document.getElementById('panel-topic').value;
+            form.appendChild(panelTopicInput);
+            document.body.appendChild(form);
+            console.log("advisors ids are here",advisorsIdInput)
+            form.submit();
+        }
+    </script>
+
+
+
+    {% endblock %}
+
+</html>

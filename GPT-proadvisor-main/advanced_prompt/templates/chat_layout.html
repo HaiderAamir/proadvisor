@@ -1,0 +1,976 @@
+<html>
+
+<head>
+  {% load static %}
+
+  <link rel="stylesheet" href="{% static 'css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/chat_design.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  
+
+
+  <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+  <link rel="shortcut icon" type="image/x-icon" th:href="@{/resources/images/favicon.png}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script src="https://kit.fontawesome.com/20b6f01eda.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+<!-- Font Awesome for the icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <style>
+    /* Hide scrollbar for Chrome, Edge, and Safari */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    .clipboard {
+      background-color: #212529 !important;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      /* box-shadow: 0 0 10px rgba(0,0,0,0.5); */
+    }
+
+    .clipboard:hover {
+      background-color: #212529 !important;
+      width: 40px;
+      height: 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #userInput {
+      position: relative;
+    }
+
+    #textInput {
+      border-radius: 10px;
+      height: 55px;
+      outline: none;
+      font-size: 16px;
+      padding-right: 40px;
+      /* Adjusted padding for the cursor */
+      position: relative;
+      /* Added position:relative */
+    }
+
+    #buttonInput {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #6c757d;
+    }
+
+    /* Blinking cursor line animation */
+    @keyframes cursorBlink {
+
+      0%,
+      100% {
+        border-right-color: transparent;
+      }
+
+      50% {
+        border-right-color: #000;
+      }
+    }
+
+    #textInput::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 25px;
+      /* Adjusted right position */
+      transform: translateY(-50%);
+      height: 20px;
+      width: 2px;
+      background-color: #000;
+      animation: cursorBlink 1s infinite;
+      box-sizing: border-box;
+    }
+
+    .name-init {
+      background-color: #3a1d59;
+
+    }
+
+    .tooltip-inner {
+      max-width: none; /* Override default max-width */
+      white-space: normal; /* Allow text wrapping */
+      color: black; /* Text color */
+      background-color: #FADA5E; /* Warning color background */
+  }
+  .container {
+    position: relative;
+  }
+
+  #userInput {
+    display: flex;
+    align-items: center;
+    background-color: #343a40; /* Bootstrap bg-dark */
+    border-radius: 10px;
+    height: 55px;
+    padding: 0 10px;
+  }
+
+  #textInput {
+    flex: 1;
+    border: 0;
+    background-color: transparent;
+    outline: none;
+    font-size: 16px;
+    color: white;
+  }
+
+  #buttonContainer {
+    display: flex;
+  }
+
+  #buttonInput, #submitButton {
+    border: 0;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+  }
+
+  #buttonInput {
+    display: block;
+  }
+
+  #submitButton {
+    display: none;
+  }
+
+  .animate-button {
+    animation: pulse-animation 1s ease infinite, listening-animation 2s alternate ease-in-out infinite;
+  }
+  
+  @keyframes pulse-animation {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  @keyframes listening-animation {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  
+
+  </style>
+
+
+
+
+</head>
+
+<body class="bgSecondary">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5">
+    <a class="navbar-brand" href="#" onclick="goBack()">
+      <i class="fas fa-arrow-left text-warning"></i>
+    </a>
+    <img src="{{ get_active_advisor_img }}" alt="Advisor Image" id="img-address"
+      class="rounded-circle shadow ms-3" style="width: 50px; height: 50px;">
+
+    <div class="ms-3">
+      <h6 class="navbar-text fw-bold text-white" style="font-family:Noto Sans;">
+        {{ data.0.header_text }}
+      </h6>
+      <p class="text-white" style="height: 10px; margin-top: -10px;">{{data.0.tagline_text}}</p>
+      <!-- <small class="text-warning">{{ disclaimer_data.disclaimer_text }}</small> -->
+    </div>
+
+    <div class="ms-auto">
+      <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="ProAdvisor.AI provides non-guaranteed, general guidance. This information is not a professional advice substitute. Please consult experts for crucial decisions. The service is not liable for use outcomes." style="text-decoration:none">
+          <i class="fa-regular fa-circle-question text-white" id="notify"></i>
+      </a>
+  </div>
+
+
+    </div>
+
+  </nav>
+
+  <main class="container pt-1 text-white" id="chatbox" style="overflow-y: auto; max-height: 80vh;">
+
+    {% for message in message_log %}
+
+    {% if message.message_type == "a" %}
+
+    <div class="w-100 text-white mt-2 py-3 row">
+      <div class="col-md-1">
+        <div>
+          <img src="{{get_active_advisor_img}}" class="ms-2 rounded-circle shadow"
+            alt="Avatar" style="width: 50px !important; height: 50px !important;">
+        </div>
+      </div>
+
+      <div class="col-md-11">
+
+
+
+        <div onclick="copyText(`{{message.content}}`)"
+          class="copyIcon d-flex align-items-center justify-content-center m-auto ms-2 clipboard float-end"
+          data-bs-toggle="tooltip" data-bs-placement="top" title="Copy"
+          style="background-color: #ffffff; width: 30px; height: 30px;">
+          <i class="fa-regular fa-clipboard" style="color: #d4cfc6;"></i>
+        </div>   
+
+
+        <div onclick="makePdf(`{{message.content}}`)"
+          class="pdfIcon d-flex align-items-center justify-content-center ms-2 m-auto clipboard float-end"
+          data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"
+          style="background-color: #ffffff; width: 30px; height: 30px;">
+          <i class="fa-regular fa-file-pdf-o" style="color: #d4cfc6;"></i>
+        </div>
+
+        
+        
+
+        <!-- Play/Pause button -->
+<div onclick="toggleSpeech(`{{message.content}}`)"
+class="playPauseIcon d-flex align-items-center justify-content-center m-auto clipboard float-end"
+data-bs-toggle="tooltip" data-bs-placement="top" title="Play"
+style="background-color: #ffffff; width: 30px; height: 30px;">
+<i id="playPauseIcon" class="fas fa-volume-up text-light"></i>
+</div>
+
+        <div class="col-md-11">
+          <div class class="text-white text-light-cs me-1 fw-lighter"
+            style="overflow-wrap: break-word; font-size: 16px !important;">
+
+            <p class="py-2" style="white-space: pre-wrap;">{{message.content}}</p>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    {% if message.message_type == "u" %}
+
+    <div class="py-2 d-flex row">
+      <div class="col-md-1">
+        <div
+          class="ms-2 rounded-circle shadow d-flex align-items-center justify-content-center text-light"
+          alt="Avatar"
+          style="width: 50px !important; height: 50px !important; font-size: larger; background-color:#3a1d59 !important;">
+          {{current_username_char}}
+        </div>
+      </div>
+      <div class="col-md-11">
+        <p class="text-white text-light-cs me-1 fw-lighter py-2"
+          style="font-size: 16px !important;">{{message.content}}</p>
+      </div>
+    </div>
+    {% endif %}
+
+
+
+    {% endfor %}
+
+    {% load static %}
+
+
+  </main>
+
+
+
+
+
+  <div class="container-fluid fixed-bottom mb-3 text-white">
+    <div id="userInput" class="container d-flex px-4 mx-auto bg-dark text-white">
+
+      <input id="textInput" class="w-100 text-white" type="text" placeholder="Ask follow up...." />
+
+      <div id="buttonContainer">
+        <button id="buttonInput" class="btn btn-lg">
+          <i class="fas fa-microphone text-white"></i>
+        </button>
+
+        <button id="submitButton" class="btn btn-lg">
+          <i class="fas fa-paper-plane text-white"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ... other HTML ... -->
+
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Function to simulate typing effect
+    function typeLastMessage() {
+      var messageElement = $('#chatbox > div:last-child p');
+      var messageText = messageElement.text();
+      var index = 0;
+
+      // Clear the content before typing effect
+      messageElement.text('');
+
+      function typeCharacter() {
+        messageElement.text(messageText.substr(0, index));
+        index++;
+
+        if (index <= messageText.length) {
+          setTimeout(typeCharacter, 10); // Adjust typing speed (milliseconds)
+        }
+      }
+
+      typeCharacter();
+    }
+
+    // Simulate typing effect on the last message
+    typeLastMessage();
+  });
+</script>
+
+
+<script type="text/javascript">
+  // When the document is ready
+  $(function() {
+      const savedState = localStorage.getItem('darkMode');
+      if (savedState === 'off') {
+        // Create the link element for the stylesheet
+    var cssLink = $('<link>', {
+      id: 'mode_change',
+      rel: 'stylesheet',
+      href: '{% static "css/lightmode.css" %}' // Use Django template tag here
+    });
+
+    // Append the link element to the head of the document
+    $('head').append(cssLink);
+      }
+    
+  });
+</script>
+
+
+
+
+  <script>
+    let isPlaying = false;
+    let speechSynthesisUtterance;
+
+    // Function to get a female voice
+    function getFemaleVoice() {
+      voices = speechSynthesis.getVoices();
+        return voices[2];
+    }
+
+    function toggleSpeech(text) {
+        console.log(text);
+        if (isPlaying) {
+            stopSpeech();
+        } else {
+            playSpeech(text);
+        }
+    }
+
+    function playSpeech(text) {
+        try {
+            // Initialize the SpeechSynthesisUtterance inside the playSpeech function
+            speechSynthesisUtterance = new SpeechSynthesisUtterance();
+
+            // Set the text to be spoken
+            speechSynthesisUtterance.text = text;
+
+            // Set the voice to a female voice
+            const femaleVoice = getFemaleVoice();
+            if (femaleVoice) {
+                speechSynthesisUtterance.voice = femaleVoice;
+            }
+
+            // Handle events
+            speechSynthesisUtterance.onstart = function () {
+                isPlaying = true;
+            };
+
+            speechSynthesisUtterance.onend = function () {
+                isPlaying = false;
+                var icon = $(".playPauseIcon").find('i');
+                // If the icon is currently stop, change it to play
+                icon.removeClass('fa-stop').addClass('fa-volume-up');
+            };
+
+            speechSynthesisUtterance.onerror = function (event) {
+                console.error('Speech synthesis error:', event);
+                isPlaying = false;
+            };
+
+            // Speak the text
+            window.speechSynthesis.speak(speechSynthesisUtterance);
+        } catch (error) {
+            console.error('Error during speech synthesis setup:', error);
+            isPlaying = false;
+        }
+    }
+
+function stopSpeech() {
+    try {
+        window.speechSynthesis.cancel();
+        isPlaying = false;
+    } catch (error) {
+        console.error('Error stopping speech synthesis:', error);
+        isPlaying = false;
+    }
+}
+
+$(document).ready(function () {
+
+  $(".playPauseIcon").click(function () {
+    
+      var icon = $(this).find('i');
+      
+      if (icon.hasClass('fa-volume-up')) {
+          // If the icon is currently play, change it to stop
+          icon.removeClass('fa-volume-up').addClass('fa-stop');
+      } else if (icon.hasClass('fa-stop')) {
+          // If the icon is currently stop, change it to play
+          icon.removeClass('fa-stop').addClass('fa-volume-up');
+      }
+  });
+  
+});
+
+</script>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+    const buttonInput = document.getElementById('buttonInput');
+    const submitButton = document.getElementById('submitButton');
+    let recognition;
+    
+    buttonInput.addEventListener('click', () => {
+      // Switch to speech recognition
+      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+    
+      recognition.onstart = () => {
+        // Add animation class when recognition starts
+        $("#textInput").css("text-align", "center").val("Listening");
+        buttonInput.classList.add('animate-button');
+      };
+    
+      recognition.onresult = (event) => {
+        
+        const transcript = event.results[0][0].transcript;
+        $("#textInput").css("text-align", "left").val(transcript);
+      };
+    
+      recognition.onend = () => {
+        // Remove animation class when recognition ends
+        buttonInput.classList.remove('animate-button');
+        if(textInput.value=="Listening")
+        {
+          $("#textInput").css("text-align", "left").val("");
+        }
+        recognition.stop();
+        toggleButtons();
+        textInput.focus();
+      };
+    
+      recognition.start();
+      toggleButtons();
+    });
+
+    submitButton.addEventListener('click', () => {
+      // Perform any necessary actions when the submit button is clicked
+      console.log('Text submitted:', textInput.value);
+      // Add additional logic or API calls as needed
+      var rawText = $("#textInput").val();
+      appendMessage(rawText, true); // Append user message
+      $("#textInput").val(""); // Clear the input field
+      getBotResponse(rawText);
+
+      // Reset UI after form submission
+      textInput.value = '';
+      toggleButtons();
+    });
+
+    textInput.addEventListener('input', () => {
+      toggleButtons();
+    });
+
+    function toggleButtons() {
+      if (textInput.value.trim() !== '') {
+        buttonInput.style.display = 'none';
+        submitButton.style.display = 'block';
+      } else {
+        buttonInput.style.display = 'block';
+        submitButton.style.display = 'none';
+      }
+    }
+    
+  </script>
+
+  <script>
+
+    $(function () {
+      $('[data-bs-toggle="tooltip"]').tooltip();
+  });
+
+    $(document).ready(function() {
+  });
+   
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+
+  <!-- code to copy the text start -->
+  <script>
+    function copyText(text) {
+      const textArea = document.createElement('textarea');
+      textArea.style.position = 'fixed';
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.opacity = 0;
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+
+      try {
+        document.execCommand('copy');
+        console.log('Text copied to clipboard');
+      } catch (err) {
+        console.error('Failed to copy text to clipboard:', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    $(document).ready(function () {
+
+      $(".copyIcon").click(function () {
+        var icon = $(this).find('i');
+        icon.toggleClass('fa-clipboard fa-circle-check');
+
+        // After 2 seconds, change the icon back to the clipboard
+        setTimeout(function () {
+          icon.toggleClass('fa-circle-check fa-clipboard');
+        }, 2000);
+      });
+    });
+  </script>
+
+
+  <!-- code to makePdf the text start -->
+  <script>
+
+    function makePdf(text) {
+      // Create a new jsPDF instance
+      const doc = new jspdf.jsPDF();
+
+       // Set a smaller font size
+    doc.setFontSize(13);
+
+    // Define margins
+    const leftMargin = 10;
+    const rightMargin = 10;
+    const topMargin = 10;
+    const docWidth = doc.internal.pageSize.getWidth();
+
+    // Add text with word wrapping
+    doc.text(text, leftMargin, topMargin, {
+      maxWidth: docWidth - leftMargin - rightMargin
+    });
+  
+      // Save the created PDF
+      doc.save('Response.pdf');
+    }
+
+    $(document).ready(function () {
+
+      $(".pdfIcon").click(function () {
+        var icon = $(this).find('i');
+        icon.toggleClass('fa-file-pdf-o fa-circle-check');
+
+        // After 2 seconds, change the icon back to the clipboard
+        setTimeout(function () {
+          icon.toggleClass('fa-circle-check fa-file-pdf-o');
+        }, 2000);
+      });
+    });
+  </script>
+
+
+  <!-- code to pdf the text end -->
+
+
+
+  <!-- blinking code for input tag start -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById('textInput').focus();
+    });
+  </script>
+  <!-- blinking code for input tag end -->
+
+  <!-- code to send and recieve message start -->
+
+  <script>
+    // Function to append a message to the chatbox
+    function appendMessage(message, isUserMessage = false) {
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+
+      if (!isUserMessage) {
+        // Create the advisor's avatar div with the image
+        const advisorImage = document.createElement('img');
+        advisorImage.src = "{{get_active_advisor_img}}";
+        advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+        advisorImage.style.width = '50px';
+        advisorImage.style.height = '50px';
+        avatarDiv.appendChild(advisorImage);
+
+      } else {
+        // Create the user's avatar div with the first letter of their name
+        const usernameFirstLetter = "{{current_username_char}}".charAt(0).toUpperCase();
+
+        avatarDiv.innerHTML = `<div class="user-avatar text-light">${usernameFirstLetter}</div>`;
+        avatarDiv.className = 'ms-4 rounded-circle shadow name-init d-flex align-items-center justify-content-center text-white';
+        avatarDiv.style.width = '50px';
+        avatarDiv.style.height = '50px';
+        avatarDiv.style.fontSize = 'larger';
+
+      }
+
+      const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+      const messageParagraph = document.createElement('p');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter', 'ms-4', 'ps-2');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+      messageParagraph.innerHTML = message;
+      newMessageDiv.appendChild(avatarDiv);
+      newMessageDiv.appendChild(messageContentDiv);
+      messageContentDiv.appendChild(messageParagraph);
+      chatboxContainer.appendChild(newMessageDiv);
+      scrollToBottom(chatboxContainer);
+
+    }
+
+    function scrollToBottom(element) {
+      element.scrollTop = element.scrollHeight;
+    }
+
+    $("#textInput").keypress(function (e) {
+      if (e.which == 13) {
+        var rawText = $("#textInput").val();
+        appendMessage(rawText, true); // Append user message
+        $("#textInput").val(""); // Clear the input field
+        toggleButtons();
+        getBotResponse(rawText);
+      }
+    });
+
+    
+
+
+    function typeResponse(responseText, referenceLinks, titles, icons) {
+      console.log(responseText);
+    
+      responseText = responseText.trim();
+      speak=responseText;
+      responseText = responseText.replace(new RegExp('\r?\n', 'g'), '<br>');
+    
+      const chatboxContainer = document.getElementById('chatbox');
+      const newMessageDiv = document.createElement('div');
+      newMessageDiv.classList.add('w-100', 'text-white', 'mt-2', 'py-3', 'row');
+    
+      // Create the advisor's avatar div with the image
+      const avatarDiv = document.createElement('div');
+      avatarDiv.classList.add('col-md-1');
+    
+      const advisorImage = document.createElement('img');
+      advisorImage.src = "{{get_active_advisor_img}}";
+      advisorImage.classList.add('ms-2', 'rounded-circle', 'border', 'border-dark', 'shadow', 'bg-dark');
+      advisorImage.style.width = '50px';
+      advisorImage.style.height = '50px';
+      avatarDiv.appendChild(advisorImage);
+    
+
+      // Create the pdfDiv element
+      const pdfDiv = document.createElement('div');
+      pdfDiv.onclick = function () {
+        makePdf(responseText);
+      };
+    
+      pdfDiv.classList.add('pdfIcon', 'm-auto', 'text-center', 'clipboard', 'float-end', 'd-flex','ms-2', 'align-items-center', 'justify-content-center');
+      pdfDiv.setAttribute('data-bs-toggle', 'tooltip');
+      pdfDiv.setAttribute('data-bs-placement', 'top');
+      pdfDiv.setAttribute('title', 'Pdf');
+      pdfDiv.style.backgroundColor = '#ffffff';
+      pdfDiv.style.width = '30px';
+      pdfDiv.style.height = '30px';
+    
+      const pdfIcon = document.createElement('i');
+      pdfIcon.classList.add('fa-regular', 'fa-file-pdf-o'); // Initial class for the icon
+      pdfIcon.style.color = '#d4cfc6';
+    
+      pdfDiv.appendChild(pdfIcon);
+
+      // Create the copyDiv element
+      const copyDiv = document.createElement('div');
+      copyDiv.onclick = function () {
+        copyText(responseText);
+      };
+    
+      copyDiv.classList.add('copyIcon', 'm-auto', 'text-center','ms-2', 'clipboard', 'float-end', 'd-flex', 'align-items-center', 'justify-content-center');
+      copyDiv.setAttribute('data-bs-toggle', 'tooltip');
+      copyDiv.setAttribute('data-bs-placement', 'top');
+      copyDiv.setAttribute('title', 'Copy');
+      copyDiv.style.backgroundColor = '#ffffff';
+      copyDiv.style.width = '30px';
+      copyDiv.style.height = '30px';
+    
+      const copyIcon = document.createElement('i');
+      copyIcon.classList.add('fa-regular', 'fa-clipboard'); // Initial class for the icon
+      copyIcon.style.color = '#d4cfc6';
+    
+      copyDiv.appendChild(copyIcon);
+      
+
+      // Create the playDiv element
+const playDiv = document.createElement('div');
+playDiv.onclick = function () {
+    toggleSpeech(speak); // Assuming responseText is the text you want to speak
+};
+
+playDiv.classList.add('playIcon', 'm-auto', 'text-center', 'clipboard', 'float-end', 'd-flex', 'align-items-center', 'justify-content-center');
+playDiv.setAttribute('data-bs-toggle', 'tooltip');
+playDiv.setAttribute('data-bs-placement', 'top');
+playDiv.setAttribute('title', 'Play');
+playDiv.style.backgroundColor = '#ffffff';
+playDiv.style.width = '30px';
+playDiv.style.height = '30px';
+
+const playIcon = document.createElement('i');
+playIcon.id = 'playIcon'; // Set a unique id for the play icon
+playIcon.classList.add('fas', 'fa-volume-up'); // Initial class for the icon
+playIcon.style.color = '#d4cfc6';
+
+playDiv.appendChild(playIcon);
+
+
+
+      const messageContentDiv = document.createElement('div');
+
+// Create the reference links div
+const referenceLinksDiv = document.createElement('div');
+referenceLinksDiv.classList.add('row', 'ms-1'); // Center align cards
+document.body.appendChild(referenceLinksDiv); // Append to body or a specific container
+
+// Function to create star rating
+function createStarRating(rating) {
+    const starDiv = document.createElement('div');
+    starDiv.classList.add('d-flex', 'align-items-center'); // Align stars and text horizontally
+    for (let i = 0; i < 5; i++) {
+        const star = document.createElement('i');
+        star.classList.add('fa', i < rating ? 'fa-star' : 'fa-star-o');
+        star.style.color = i < rating ? 'gold' : 'gray'; // Change star color based on rating
+        star.style.fontSize = '0.6rem'; // Reduced star size
+        starDiv.appendChild(star);
+    }
+    return starDiv;
+}
+
+// Parse reference links and create clickable cards
+for (let i = 0; i < Math.min(referenceLinks.length, 3); i++) {
+    const linkCard = document.createElement('a'); // Use an anchor tag to make the card clickable
+    linkCard.style.textDecoration = "none";
+    linkCard.href = referenceLinks[i]; // Set the link URL
+    linkCard.target = '_blank'; // Open link in a new tab
+    linkCard.classList.add('card', 'shadow', 'mb-4', 'me-2', 'col-md-2', 'cursor-pointer', 'custom-card', 'bg-dark', 'text-white', 'slim-card'); // Reduced padding, card size, and added margin
+    linkCard.style.transition = 'transform 0.2s'; // Add smooth transition on hover
+
+    // Card body
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body', 'd-flex', 'flex-column', 'align-items-start', 'p-2'); // Reduced padding
+
+    // First row: Greeting and plain text
+    const greetingRow = document.createElement('div');
+    greetingRow.classList.add('d-flex', 'justify-content-between', 'w-100', 'mb-1'); // Use 'w-100' to occupy the full width
+
+    // Greeting
+    const greeting = document.createElement('h4'); // Reduced font size
+    greeting.innerText = titles[i];
+    greeting.classList.add('mb-0', 'text-white','small'); // Change text color to primary
+
+    greetingRow.appendChild(greeting);
+
+    // Second row: Icon and Ratings
+    const iconRatingRow = document.createElement('div');
+    iconRatingRow.classList.add('d-flex', 'justify-content-between', 'w-100', 'mt-2'); // Use 'w-100' to occupy the full width
+
+    // Favicon
+    const icon = document.createElement('img');
+    if(icons[i]!='error')
+    {
+      icon.src = icons[i]; // Reduce favicon size
+      icon.width = 20; // Set the width to 20 pixels
+      icon.height = 20; // Set the height to 20 pixels
+    }
+    else{
+      icon.src = 'https://via.placeholder.com/20'; // Reduce favicon size
+    }
+    
+    icon.classList.add('favicon', 'rounded-circle'); // Remove 'mr-6' margin
+
+    // Star rating
+    const rating = createStarRating(5 - i);
+    rating.style.marginLeft = 'auto'; // Move the rating to the right
+
+    iconRatingRow.appendChild(icon);
+    iconRatingRow.appendChild(rating);
+
+    cardBody.appendChild(greetingRow);
+    cardBody.appendChild(iconRatingRow);
+    linkCard.appendChild(cardBody);
+    referenceLinksDiv.appendChild(linkCard);
+
+    // Add hover effect
+    linkCard.addEventListener('mouseenter', () => {
+        linkCard.style.transform = 'scale(1.05)'; // Slightly increase the scale on hover
+    });
+    linkCard.addEventListener('mouseleave', () => {
+        linkCard.style.transform = 'scale(1)';
+    });
+}
+
+
+// Add this CSS rule to remove text decoration from anchor tags inside the cards
+const customCardLinks = document.querySelectorAll('.custom-card a');
+customCardLinks.forEach(link => {
+    link.style.setProperty('text-decoration', 'none', '!important');
+});
+
+
+
+  messageContentDiv.appendChild(referenceLinksDiv);
+
+  // Log the content of referenceLinksDiv for debugging
+  console.log('Reference Links Div:', referenceLinksDiv.innerHTML);
+    
+      // Create the messageContentDiv
+      //const messageContentDiv = document.createElement('div');
+      messageContentDiv.classList.add('col-md-11');
+    
+      const responseContainer = document.createElement('div');
+      responseContainer.classList.add('typing');
+    
+      const messageParagraph = document.createElement('div');
+      messageParagraph.classList.add('text-white', 'text-light-cs', 'me-1', 'fw-lighter');
+      messageParagraph.style.fontSize = '16px';
+      messageParagraph.style.color = '#d4cfc6';
+    
+      responseContainer.appendChild(messageParagraph);
+      messageContentDiv.appendChild(copyDiv); // Add the copyDiv
+      messageContentDiv.appendChild(pdfDiv); // Add the pdfDiv
+      messageContentDiv.appendChild(playDiv); // Add the copyDiv
+      messageContentDiv.appendChild(responseContainer); // Add the message content
+      newMessageDiv.appendChild(avatarDiv); // Add the advisor's avatar
+      newMessageDiv.appendChild(messageContentDiv);
+      chatboxContainer.appendChild(newMessageDiv);
+    
+      scrollToBottom(chatboxContainer);
+    
+      // Simulate typing animation
+      const responseLines = responseText.split('<br>');
+      let lineIndex = 0;
+      let charIndex = 0;
+    
+      function typeNextCharacter() {
+        if (lineIndex < responseLines.length) {
+          const line = responseLines[lineIndex];
+          if (charIndex < line.length) {
+            messageParagraph.innerHTML += line[charIndex];
+            charIndex++;
+            setTimeout(typeNextCharacter, 10); // Adjust the typing speed here
+          } else {
+            messageParagraph.innerHTML += '<br>'; // Make paragraphs in this section so the br tag can work
+            lineIndex++;
+            charIndex = 0;
+            setTimeout(typeNextCharacter, 0); // Delay before starting the next line
+          }
+        }
+        scrollToBottom(chatboxContainer); // Scroll to the bottom automatically if the text increased
+      }
+    
+      typeNextCharacter();
+    }
+    
+    function getBotResponse(rawText) {
+      $.get("/get", { msg: rawText }).done(function (data) {
+        // Access the response and links from the data object
+        var response = data.response;
+        var websiteLinks = data.website_links;
+        var titles = data.titles;
+        var icons = data.icons;
+    
+        // Do something with the response and links
+        console.log("Response:", response);
+        console.log("Website Links:", websiteLinks);
+        console.log("titles:", titles);
+    
+        // Example: Update the UI with the response
+        typeResponse(response, websiteLinks, titles, icons);
+      });
+    }
+  </script>
+  <!-- code to send and recieve message end -->
+
+  <!-- code to scroll the main box start -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      scrollToBottom();
+    });
+
+    function scrollToBottom() {
+      var mainContainer = document.querySelector('.container');
+      mainContainer.scrollTop = mainContainer.scrollHeight;
+    }
+  </script>
+  <!-- code to scrolll the main box end -->
+
+
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+</body>
+
+
+
+</html>

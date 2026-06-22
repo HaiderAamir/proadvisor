@@ -1,0 +1,62 @@
+.bg-dark{
+    background-color: #f5f5f5 !important;
+}
+
+.bgSecondary {
+    background-color: #ffffff !important; /* Adjust to your preferred shade */
+}
+
+.text-white {
+    color: black !important;
+}
+
+
+.active, .side-menu-links:hover {
+    background-color: #ffd990; /* Lighter gray for hover in light mode */
+}
+
+
+#searchInput {
+    border-color: #161515; /* Lighter border color */
+}
+
+::placeholder {
+    color: #413434 !important; /* Lighter placeholder text */
+}
+
+.dropdown-menu-dark {
+    background-color: white !important;
+    border-color: #ddd !important;    /* A light border for visual contrast */
+    color: black !important;          /* Text color set to black for readability on white background */
+}
+
+::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #7c7c7c !important;
+    opacity: 0.5 !important;
+    /* Firefox */
+  }
+
+.chosen {
+  border: 2px solid #ffd076 !important; /* Add your chosen card styling here */
+  background-color: #fffcf2 !important; /* Add background color or other styling */
+}
+/* Highlight only the first 3 cards */
+
+#advisor-container > div:nth-child(-n+3){
+  border: 2px solid #ffd076; /* Add a border to highlight */
+  box-shadow: 0px 0px 10px 0px #ffd076;
+  background-color: #fffcf2 !important; /* Add background color or other styling */
+}
+
+/* hover card efext home.html */
+.active, .category-swiper:hover{
+    background-color: #ffd990 !important;
+    color: #000000 !important;
+    }
+    
+    .swiper-slide:hover .title-category {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    background-color: #ffd990 !important;
+    }

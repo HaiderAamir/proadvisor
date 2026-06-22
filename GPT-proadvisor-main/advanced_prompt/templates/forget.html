@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProAdvisor | Login Page</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/20b6f01eda.js" crossorigin="anonymous"></script>
+
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css' %}">
+
+    <style>
+        .bg-black{
+            background-color: #333 !important; /* Dark background color */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .btn-primary
+        {
+            background-color: #556ee6 !important;
+        }
+
+        #signup-button, #signin-button:hover{
+            cursor: pointer; 
+        }
+        .form-control{
+            border: 0px !important;
+            border-bottom: 2px solid #f1b135 !important;
+            border-radius: 0px !important;
+            /*background-color: */
+            }
+            
+        .form-control:focus {
+            border: 0px !important;
+            border-bottom: 2px solid #f1b135 !important;
+            border-radius: 0px !important;
+            box-shadow: none !important;   
+        }
+
+        .form-control.bg-dark{
+            color: #ffffff;
+            
+        }
+
+        .form-control::placeholder {
+            color: #c0c0b7;
+        }
+
+        .text-light{
+            color: #c0c0b7 !important;
+        }
+
+        .swal-alert {
+            z-index: 9999;
+            
+        }
+        .smaller-font{
+            font-size: 24px;
+
+        }
+        .height-100{
+            height: 100vh;
+        }
+
+        .btn-yellow{
+            background-color: #f1b135;
+            font-weight: bold !important;
+          }
+          
+        .btn-yellow:hover{
+        border: 1px solid #f1b135;
+        color: #f1b135;
+        font-weight: bold !important;
+        }
+
+        .text-yellow{
+            color: #f1b135;
+          }
+
+        .fa-solid{
+            color: #f1b135 !important;
+        }
+            
+    </style>
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+
+
+</head>
+
+
+<body class="bg-black">
+
+    {% include './component/header.html' %}
+
+
+
+
+    <div class="container-fluid row height-100">
+        <div class="col-md-7 d-none d-md-block">
+            <div class="d-flex align-items-center ms-5 h-100 text-yellow">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="">Need expert Professional Advice? Looking for solutions?</h3>
+                    </div>
+                    <div class="col-md-12">
+                        <h4 class="text-light gpt-line"></h4>
+                    </div>
+                        
+                </div>
+                
+            </div>
+        </div> 
+
+        <div class="col-md-5 m-auto">
+            <form class="container w-75 h-100 pt-4 bg-dark text-center rounded-3" style="border: 1px solid #f1b135;" method="post" action="/forget-password">
+
+                {% csrf_token %}
+
+
+                <div class="m-auto" style="border: 2px solid #f1b135; border-radius: 50%; height: 80px; width: 80px; display: flex; justify-content: center; align-items: center;">
+                    <i class="fa-solid fa-lock fa-2xl"></i>
+                </div>
+                
+                <h5 class="text-center text-light mt-3 mb-4">Trouble logging in?</h5>
+                <input class="form-control form-input-control w-75 m-auto mb-4 bg-dark" type="email" id="email" name="email" placeholder="Email" aria-label="Email" required>
+                <input name="signin" class="btn btn-yellow mb-5" type="submit" value="Submit">
+
+                <p class="text-light py-2">Back to <a href="/signin" style="color: #c5c0b7;font-weight: bolder;" id="signup-button">Sign-in</a></p>
+
+            </form>
+
+        </div>
+
+        
+    </div>
+
+    <section>
+
+    <div class="footer bg-dark text-white text-center py-3 fixed-bottom">
+        <div class="row">
+            {% include './component/footer.html' %}
+    
+        </div>
+    </div>
+
+    </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script>
+        const text = "You're in the right place! Our platform connects you with experienced advisors who can help you find solutions to your challenges. Sign in to get started...";
+        let index = 0;
+        const speed = 50;
+
+        function typeEffect() {
+            if (index < text.length) {
+                document.querySelector('.gpt-line').innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, speed);
+            }
+        }
+
+        typeEffect();
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+           
+
+            document.getElementById("signup-button").addEventListener("click", function() {
+                document.getElementById("signup").classList.remove("d-none");
+                document.getElementById("signin").classList.add("d-none");
+            });
+
+            document.getElementById("signin-button").addEventListener("click", function() {
+                document.getElementById("signup").classList.add("d-none");
+                document.getElementById("signin").classList.remove("d-none");
+            });
+
+        });
+
+    </script>
+
+<script>
+    $(document).ready(function(){
+        $("#search-form").remove();
+        $("#header-row > li").remove();
+
+    })
+    
+</script>
+
+
+    
+    
+</body>
+</html>
+
