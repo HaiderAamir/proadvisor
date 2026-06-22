@@ -179,8 +179,8 @@ def email_forget_password(email):
             # Handle exceptions, e.g., database errors
             print(f"Error: {str(e)}")
 
-openai.api_key = "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"
-# openai.api_key = "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"
+openai.api_key = ""
+# openai.api_key = ""
 
 # Set up the model and prompt
 model_engine = "text-davinci-003"
